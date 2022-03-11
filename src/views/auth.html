@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <%- include('head.html') -%>
+
+  <body>
+    Successfully Authorized. Redirecting to Home..
+    <input id="username" type="hidden" name="username" value="<%= username %>">
+    <input id="rnbUserId" type="hidden" name="rnbUserId" value="<%= rnbUserId %>">
+    <input id="isCreator" type="hidden" name="isCreator" value="<%= creator %>">
+  </body>
+
+  <script>
+    let user = $('#username').val();
+    let id = $('#rnbUserId').val();
+    let creator = $('#isCreator').val();
+    console.log(user, id, creator);
+    // TODO Session storage instead?
+    localStorage.setItem('username', user);
+    localStorage.setItem('rnbUserId', id);
+    localStorage.setItem('isCreator', creator);
+    if (creator == "true") window.location = `/creator/${user}`;
+    else window.location = `/user/${id}`;
+  </script>
+
+</html>

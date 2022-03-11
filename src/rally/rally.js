@@ -30,11 +30,6 @@ async function post_request(url, body, headers) {
 }
 
 class RallyClient {
-  
-  access_token = undefined
-  refresh_token = undefined
-  token_type = undefined
-  expiry = undefined
 
   constructor(username, password, base_url, v1_url, api_url, callback_url) {
     this.username = username;
@@ -43,20 +38,21 @@ class RallyClient {
     this.v1_url = v1_url;
     this.api_url = api_url;
     this.callback_url = callback_url;
+    this.clearAuth();
   }
 
   setAuth(data) {
-    if(data) {
-      this.access_token = data.access_token;
-      this.refresh_token = data.refresh_token;
-      this.token_type = data.token_type;
-      this.expiry = Date.now() + data.expires_in * 1000;
-    } else {
-      this.access_token = undefined;
-      this.refresh_token = undefined;
-      this.token_type = undefined;
-      this.expiry = undefined;
-    }
+    this.access_token = data.access_token;
+    this.refresh_token = data.refresh_token;
+    this.token_type = data.token_type;
+    this.expiry = Date.now() + data.expires_in * 1000;
+  }
+
+  clearAuth() {
+    this.access_token = undefined;
+    this.refresh_token = undefined;
+    this.token_type = undefined;
+    this.expiry = undefined;
   }
 
   isValidToken() {
@@ -76,7 +72,7 @@ class RallyClient {
       console.log('successfully registered');
       return true;
     } else {
-      this.setAuth();
+      this.clearAuth();
       console.log('registration failed');
       throw ErrFailRegister;
     }
@@ -119,6 +115,28 @@ class RallyClient {
       console.log('Callback failed');
       throw ErrFailAuth;
     }
+  }
+
+  async checkCreator(user) {
+    console.log(`checking if ${user} is a creator`);
+    if (!this.isValidToken()) throw ErrInvalidToken; // Caller handles by calling `register()`
+    let res = await get_request(`${this.api_url}/creator-coins`,
+      { Authorization: `${this.token_type} ${this.access_token}` },
+      { size: 50 }
+    );
+    let lastKey = res.headers['last-evaluated-key'];
+    while (lastKey !== undefined) {
+      let data = res.data;
+      data.forEach((elem) => {
+        if (elem.creatorAccountId == user) return true;
+      });
+      res = await get_request(`${this.api_url}/creator-coins`,
+        { Authorization: `${this.token_type} ${this.access_token}` },
+        { startKey: lastKey, size: 50 }
+      );
+      lastKey = res.headers['last-evaluated-key'];
+    }
+    return false;
   }
 
   balance(token) {

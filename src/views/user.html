@@ -1,0 +1,24 @@
+<html>
+  <%- include('head.html') -%>
+
+  <body>
+    <h1>Home</h1>
+
+    <p>
+      Username : <span id="username"></span>
+    </p>
+
+    <p>
+      rnb User ID : <span id="rnbUserId"></span>
+    </p>
+
+    <!-- TODO display balances -->
+
+  </body>
+
+  <script>
+    $('#username').html(localStorage.getItem('username'));
+    $('#rnbUserId').html(localStorage.getItem('rnbUserId'));
+  </script>
+
+</html>

@@ -37,15 +37,21 @@ app.get('/callback', async (req, res) => {
   try {
     let code = req.query.code;
     let data = await rallyClient.userID(code);
-    res.json(data);
+    data.creator = await rallyClient.checkCreator(data.username);
+    res.render('auth', data)
   } catch (err) {
     console.log(err);
   }
 });
 
-app.get('/home', async (req, res) => {
-
+app.get('/user/:id', async (req, res) => {
+  let rnbID = req.params.id;
+  // TODO get held coins
+  res.render('user');
 });
 
+app.get('/creator/:username', (req, res) => {
+  res.render('creator');
+})
 
 module.exports = { app }

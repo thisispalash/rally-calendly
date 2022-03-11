@@ -1,6 +1,11 @@
 <html>
   <%- include('head.html') -%>
 
+  <script>
+    if (localStorage.getItem('isCreator') == 'false')
+      window.location = `/user/${localStorage.getItem('rnbUserId')}`;
+  </script>
+
   <body>
     <h1>Home</h1>
 

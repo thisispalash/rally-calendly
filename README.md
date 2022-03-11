@@ -15,7 +15,7 @@
 ## Project Steps
 
 - [x] Talk with the Rally team and understand requirements
-- [ ] Login with Rally
+- [x] Login with Rally
 - [ ] Add Calendly OAuth
 - [ ] Create new Calendly events
 - [ ] Book a available timeslot

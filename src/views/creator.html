@@ -1,31 +1,33 @@
-<html>
-  <%- include('head.html') -%>
+<%- include('components/head.html') -%>
 
-  <script>
-    if (localStorage.getItem('isCreator') == 'false')
-      window.location = `/user/${localStorage.getItem('rnbUserId')}`;
-  </script>
+<script>
+  // Reconfirm that user is displayed the user page
+  if (localStorage.getItem('isCreator') == 'false')
+    window.location = `/user/${localStorage.getItem('rnbUserId')}`;
+</script>
 
-  <body>
-    <h1>Home</h1>
-
-    <p>
+<div class="container-fluid">
+  <header class="mb-auto py-2">
+    <h1 class="display-6">Home</h1>
+    <hr>
+    <p class="lead">
       Username : <span id="username"></span>
+      <br>
+      Network ID : <span id="rnbUserId"></span>
     </p>
+  </header>
 
-    <p>
-      rnb User ID : <span id="rnbUserId"></span>
-    </p>
+  <main></main>
 
-    <p>
-      Connect Calendly
-    </p>
+  <footer class="mt-auto"></footer>
 
-  </body>
+</div>
 
-  <script>
-    $('#username').html(localStorage.getItem('username'));
-    $('#rnbUserId').html(localStorage.getItem('rnbUserId'));
-  </script>
+<!-- TODO display balances -->
 
-</html>
+<script>
+  $('#username').html(localStorage.getItem('username'));
+  $('#rnbUserId').html(localStorage.getItem('rnbUserId'));
+</script>
+
+<%- include('components/tail.html') -%>

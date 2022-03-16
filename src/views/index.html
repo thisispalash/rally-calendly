@@ -1,12 +1,20 @@
-<html>
-  <%- include('head.html') -%>
+<%- include('components/head.html') -%>
 
-  <body>
-    <h1>Authorize Application via Rally</h1>
+<div class="container-fluid d-flex flex-column">
+
+  <header class="mb-auto"></header>
+
+  <main class="px-3">
+    <h1 class="display-6">Rally CalendlyGate</h1>
+
+    <p class="lead">Click the button to authorize application via RallyIO</p>
 
     <form method="post" action="/authorize">
-      <input type="submit" value="login">
+      <input type="submit" value="login" class="btn btn-large btn-outline-light">
     </form>
-  </body>
+  </main>
 
-</html>
+  <footer class="mt-auto"></footer>
+</div>
+
+<%- include('components/tail.html') -%>

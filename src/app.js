@@ -54,4 +54,8 @@ app.get('/creator/:username', (req, res) => {
   res.render('creator');
 })
 
+app.get('/calendly-callback', (req, res) => {
+  
+});
+
 module.exports = { app }

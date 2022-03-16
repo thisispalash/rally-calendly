@@ -1,29 +1,33 @@
-<html>
-  <%- include('head.html') -%>
+<%- include('components/head.html') -%>
 
-  <script>
-    if (localStorage.getItem('isCreator') == 'true')
-      window.location = `/creator/${localStorage.getItem('username')}`;
-  </script>
+<script>
+  // Reconfirm that creator is displayed the creator page
+  if (localStorage.getItem('isCreator') == 'true')
+    window.location = `/creator/${localStorage.getItem('username')}`;
+</script>
 
-  <body>
-    <h1>Home</h1>
-
-    <p>
+<div class="container-fluid">
+  <header class="mb-auto py-2">
+    <h1 class="display-6">Home</h1>
+    <hr>
+    <p class="lead">
       Username : <span id="username"></span>
+      <br>
+      Network ID : <span id="rnbUserId"></span>
     </p>
+  </header>
 
-    <p>
-      rnb User ID : <span id="rnbUserId"></span>
-    </p>
+  <main></main>
 
-    <!-- TODO display balances -->
+  <footer class="mt-auto"></footer>
 
-  </body>
+</div>
 
-  <script>
-    $('#username').html(localStorage.getItem('username'));
-    $('#rnbUserId').html(localStorage.getItem('rnbUserId'));
-  </script>
+<!-- TODO display balances -->
 
-</html>
+<script>
+  $('#username').html(localStorage.getItem('username'));
+  $('#rnbUserId').html(localStorage.getItem('rnbUserId'));
+</script>
+
+<%- include('components/tail.html') -%>

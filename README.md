@@ -16,7 +16,7 @@
 
 - [x] Talk with the Rally team and understand requirements
 - [x] Login with Rally
-- [ ] Add Calendly OAuth
+- [x] Add Calendly OAuth
 - [ ] Setup db and store events
 - [ ] Show events from db
 - [ ] Book a available timeslot

@@ -6,6 +6,7 @@ const path = require('path');
 const { rallyClient } = require('./rally');
 const { calendlyClient } = require('./calendly');
 
+import { addToDB, updateDB } from './db';
 
 const app = express();
 
@@ -65,7 +66,11 @@ app.get('/calendly-callback', async (req, res) => {
     let code = req.query.code;
     console.log(code);
     let data = await calendlyClient.tokenize(code);
-    // TODO add data to db
+    await addToDB('CalendlyAccess', data);
+    let uuid = data.owner;
+    data = await calendlyClient.getUser(data.token_type, data.access_token, uuid);
+    await updateDB('CalendlyAccess', { owner: uuid }, data);
+    res.send(data.slug);
   } catch (err) {
     console.log(err);
   }
@@ -73,10 +78,11 @@ app.get('/calendly-callback', async (req, res) => {
 
 app.get('/calendly-refresh', async (req, res) => {
   try {
-    let user = req.query.uuid;
-    // TODO get refresh token from db
-    let data = await calendlyClient.refresh();
-    // TODO update db
+    let user = req.query.slug;
+    let doc = await findInDB('CalendlyAccess', { slug: user });
+    let data = await calendlyClient.refresh(doc.refresh_token);
+    await updateDB('CalendlyAccess', { slug: user }, data);
+    res.send(data.expires_at);
   } catch (err) {
     console.log(err);
   }

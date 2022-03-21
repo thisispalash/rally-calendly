@@ -1,5 +1,5 @@
 import express from 'express';
-import RallyClient from '../rally';
+import { RallyClient } from '../clients';
 import { addToDB } from '../db';
 
 const router = express.Router();

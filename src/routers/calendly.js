@@ -1,5 +1,5 @@
 import express from "express";
-import CalendlyClient from '../calendly';
+import { CalendlyClient } from '../clients';
 import { addToDB, updateDB } from "../db";
 
 const router = express.Router();

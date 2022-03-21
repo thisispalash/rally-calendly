@@ -1,3 +1,4 @@
+import { calendlyClient } from ".";
 import { get_request, post_request } from "../utils/axios";
 import { ErrCalendly } from "../utils/errors";
 
@@ -11,7 +12,7 @@ class CalendlyClient {
     this.callback = callback;
   }
 
-  async authorize() {
+  authorize() {
     console.log('building calendly auth link..');
     return `${this.auth_url}/oauth/authorize?response_type=code&client_id=${this.client_id}&redirect_uri=${this.callback}`;
   }
@@ -87,4 +88,4 @@ class CalendlyClient {
 
 }
 
-module.exports = { CalendlyClient }
+export default CalendlyClient;

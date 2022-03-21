@@ -1,21 +1,24 @@
-'use strict';
-
-import mongoose from 'mongoose';
 import { CalendlyAccessModel } from './calendly';
+import { RallyUserModel } from './rally';
 
 import { ErrDB } from '../utils/errors';
 
-const addToDB = async (model, data) => {
+export const addToDB = async (model, data) => {
   switch (model) {
     case 'CalendlyAccess':
       let res = await CalendlyAccessModel.find({ owner: data.owner });
       if (res[0]) throw ErrDB.Exists;
       await CalendlyAccessModel.create(data);
       break;
+    case 'RallyUser':
+      let res = await RallyUserModel.find({ userID: data.userID });
+      if (res[0]) throw ErrDB.Exists;
+      await RallyUserModel.create(data);
+      break;
   }
 }
 
-const updateDB = async (model, filter, data) => {
+export const updateDB = async (model, filter, data) => {
   switch (model) {
     case 'CalendlyAccess':
       await CalendlyAccessModel.updateOne(filter, data);
@@ -23,7 +26,7 @@ const updateDB = async (model, filter, data) => {
   }
 }
 
-const findInDB = async (model, query) => {
+export const findInDB = async (model, query) => {
   switch (model) {
     case 'CalendlyAccess':
       let data = CalendlyAccessModel.findOne(query);
@@ -31,5 +34,3 @@ const findInDB = async (model, query) => {
       return data;
   }
 }
-
-module.exports = { addToDB, updateDB };

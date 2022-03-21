@@ -82,7 +82,10 @@ class RallyClient {
     )
     if (res.status == 200) {
       console.log('User authorized application');
-      return res.data;
+      return {
+        userID: res.data.username,
+        networkID: res.data.rnbUserId
+      };
     } else {
       console.log('Callback failed');
       throw ErrRally.FailAuth;
@@ -117,4 +120,4 @@ class RallyClient {
 
 }
 
-module.exports = { RallyClient }
+export default RallyClient;

@@ -1,4 +1,4 @@
-const { CalendlyClient } = require("./calendly");
+import Client from './calendly';
 
 // Reading the Calendly client params from environment variables
 const base_url = process.env.CALENDLY_BASE_URL || "https://api.calendly.com";
@@ -8,6 +8,6 @@ const secret = process.env.CALENDLY_SECRET;
 const callback = process.env.CALENDLY_CALLBACK;;
 
 // API client for interacting with the Calendly API
-const calendlyClient = new CalendlyClient(client_id, secret, auth_url, base_url, callback);
+const client = new Client(client_id, secret, auth_url, base_url, callback);
 
-module.exports = { calendlyClient };
+export default client;

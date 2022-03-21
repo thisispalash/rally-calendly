@@ -1,4 +1,4 @@
-const { RallyClient } = require("./rally");
+import Client from './rally';
 
 // Reading the Rally client params from environment variables
 const base_url = process.env.RALLY_BASE_URL || "https://api.rally.io";
@@ -9,6 +9,6 @@ const password = process.env.RALLY_PASSWORD;
 const callback_url = process.env.RALLY_CALLBACK;
 
 // API client for interacting with the Rally API
-const rallyClient = new RallyClient(username, password, base_url, v1_url, api_url, callback_url);
+const client = new Client(username, password, base_url, v1_url, api_url, callback_url);
 
-module.exports = { rallyClient };
+export default client;

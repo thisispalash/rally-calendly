@@ -1,5 +1,3 @@
-'use strict';
-
 import mongoose from 'mongoose';
 
 const CalendlyAccessSchema = new mongoose.Schema({
@@ -13,6 +11,4 @@ const CalendlyAccessSchema = new mongoose.Schema({
   expires_at: Date
 });
 
-const CalendlyAccessModel = mongoose.model('calendly_access', CalendlyAccessSchema);
-
-module.exports = { CalendlyAccessModel };
+export const CalendlyAccessModel = mongoose.model('calendly_access', CalendlyAccessSchema);

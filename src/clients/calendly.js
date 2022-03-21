@@ -75,9 +75,9 @@ class CalendlyClient {
     );
     if (res.status == 200) {
       let data = {};
-      data.owner = res.data.uri.split('/').slice(-1)[0];
-      data.name = res.data.name;
-      data.slug = res.data.slug;
+      data.owner = res.data.resource.uri.split('/').slice(-1)[0];
+      data.name = res.data.resource.name;
+      data.slug = res.data.resource.slug;
       return data;
     } else {
       console.log('Error in fetching user');

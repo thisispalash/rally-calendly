@@ -1,0 +1,34 @@
+<div class="container" id="calendlyLogin">
+  <button class="btn btn-large btn-outline-light" onclick="loginCalendly()">Calendly Login</button>
+  <form method="post" action="/home">
+    <input name="type" type="hidden" value="calendly">
+    <input name="isCreator" type="hidden" id="isCreator">
+    <input name="slug" type="hidden" id="slug">
+  </form>
+</div>
+
+<div class="container" id="calendlySlug">
+  <p class="lead">Calendly: <span id="slugVal"></span></p>
+</div>
+
+<script>
+  function submitForm(slug) {
+    sessionStorage.setItem('calendly-slug', slug);
+    $('#isCreator').val(sessionStorage.getItem('isCreator'));
+    $('#slug').val(slug);
+    $('form').submit();
+  }
+</script>
+
+<script>
+  let slug = sessionStorage.getItem('calendly-slug');
+  console.log(slug)
+  if (slug) {
+    $('#calendlyLogin').css('display', 'none');
+    $('#slugVal').html(`@${slug}`);
+    $('#calendlySlug').css('display', 'block');
+  } else {
+    $('#calendlyLogin').css('display', 'block');
+    $('#calendlySlug').css('display', 'none');
+  }
+</script>

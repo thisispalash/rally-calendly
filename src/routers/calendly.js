@@ -14,9 +14,9 @@ router.get('/callback', async (req, res) => {
   try {
     let data = await CalendlyClient.tokenize(code);
     await addToDB('CalendlyAccess', data);
-    data = await calendlyClient.getUser(data.token_type, data.access_token, data.owner);
+    data = await CalendlyClient.getUser(data.token_type, data.access_token, data.owner);
     await updateDB('CalendlyAccess', { owner: data.owner }, data);
-    res.send(data.slug);
+    res.render('authC', { slug: data.slug });
   } catch (err) {
     console.log(err);
   }

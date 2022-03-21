@@ -19,6 +19,7 @@
     <button class="btn btn-large btn-outline-light" onclick="loginRally()">Login</button>
 
     <form action="/home" method="post" name="rally-login">
+      <input name="auth" type="hidden" value="rally">
       <input id="rally-userID" type="hidden" name="userID">
       <input id="rally-networkID" type="hidden" name="networkID">
       <input id="isCreator" type="hidden" name="isCreator">

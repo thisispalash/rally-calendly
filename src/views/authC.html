@@ -1,0 +1,12 @@
+<%- include('components/head.html') -%>
+
+<p>
+  Successfully Authorized. Redirecting to Home..
+</p>
+
+<script>
+  opener.submitForm('<%= slug %>');
+  window.close();
+</script>
+
+<%- include('components/tail.html') -%>

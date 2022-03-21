@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Calendly from './calendly.js';
 import Rally from './rally.js';
 

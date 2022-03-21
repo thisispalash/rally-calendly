@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import path from 'path';
 import ejs from 'ejs';
 
@@ -7,6 +8,9 @@ import rallyRouter from './routers/rally.js';
 import calendlyRouter from './routers/calendly.js';
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.engine('.html', ejs.__express);
 app.set('view engine', 'html');

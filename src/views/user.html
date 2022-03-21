@@ -1,11 +1,5 @@
 <%- include('components/head.html') -%>
 
-<script>
-  // Reconfirm that creator is displayed the creator page
-  if (localStorage.getItem('isCreator') == 'true')
-    window.location = `/creator/${localStorage.getItem('username')}`;
-</script>
-
 <div class="container-fluid">
   <header class="mb-auto py-2 mt-3">
     <div class="container">
@@ -36,8 +30,8 @@
 <!-- TODO display balances -->
 
 <script>
-  $('#username').html(localStorage.getItem('username'));
-  $('#rnbUserId').html(localStorage.getItem('rnbUserId'));
+  $('#username').html(sessionStorage.getItem('rally-userID'));
+  $('#rnbUserId').html(sessionStorage.getItem('rally-networkID'));
 </script>
 
 <%- include('components/tail.html') -%>

@@ -7,12 +7,13 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     let data = await RallyClient.register();
+    res.send(data);
   } catch (err) {
     console.log(err);
   }
 });
 
-router.post('/auth', async (req, res) => {
+router.get('/auth', async (req, res) => {
   try {
     let url = await RallyClient.authorize();
     res.redirect(url);
@@ -26,6 +27,7 @@ router.get('/callback', async (req, res) => {
   try {
     let data = await RallyClient.userID(code);
     data.isCreator = await RallyClient.checkCreator(data.userID);
+    res.render('auth', data);
     await addToDB('RallyUser', data);
   } catch (err) {
     console.log(err);

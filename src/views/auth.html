@@ -1,21 +1,16 @@
 <%- include('components/head.html') -%>
-
-Successfully Authorized. Redirecting to Home..
-<input id="username" type="hidden" name="username" value="<%= username %>">
-<input id="rnbUserId" type="hidden" name="rnbUserId" value="<%= rnbUserId %>">
-<input id="isCreator" type="hidden" name="isCreator" value="<%= creator %>">
+<p>
+  Successfully Authorized. Redirecting to Home..
+</p>
 
 <script>
-  let user = $('#username').val();
-  let id = $('#rnbUserId').val();
-  let creator = $('#isCreator').val();
-  console.log(user, id, creator);
-  // TODO Session storage instead?
-  localStorage.setItem('username', user);
-  localStorage.setItem('rnbUserId', id);
-  localStorage.setItem('isCreator', creator);
-  if (creator == "true") window.location = `/creator/${user}`;
-  else window.location = `/user/${id}`;
+  let data = {
+    userID: '<%= userID %>',
+    networkID: '<%= networkID %>',
+    isCreator: '<%= isCreator %>'
+  }
+  opener.submitForm(data);
+  window.close();
 </script>
 
 <%- include('components/tail.html') -%>

@@ -4,7 +4,8 @@ import 'dotenv/config';
 
 try {
   // ensure `mongod` is running
-  await mongoose.connect('mongodb://localhost:27017/rally-gatr');
+  const conn = await mongoose.connect('mongodb://localhost:27017/rally-gatr');
+  if (process.env.ENV === 'dev') await conn.connection.db.dropDatabase(); // for easier testing
   console.log('MongoDB up and running!')
 } catch (err) {
   console.log('Failed to start MongoDB');

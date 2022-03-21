@@ -1,8 +1,5 @@
 import { get_request, post_request } from "../utils/axios";
-
-const ErrFailAuth = new Error('User authorization failed');
-const ErrExpiredToken = new Error('Access Token is expired, please refresh');
-const ErrInvalidToken = new Error('No Authorization token available');
+import { ErrCalendly } from "../utils/errors";
 
 class CalendlyClient {
 
@@ -37,7 +34,7 @@ class CalendlyClient {
       return data;
     } else {
       console.log('User unauthenticated');
-      throw ErrFailAuth;
+      throw ErrCalendly.FailAuth;
     }
   }
 
@@ -58,7 +55,7 @@ class CalendlyClient {
       return data;
     } else {
       console.log('Error in refreshing access token');
-      throw ErrFailAuth;
+      throw ErrCalendly.FailRefresh;
     }
   }
 
@@ -72,7 +69,7 @@ class CalendlyClient {
   }
   
   async getUser(token_type, token, uuid) {
-    if (!this.isValidToken) throw ErrExpiredToken;
+    if (!this.isValidToken) throw ErrCalendly.ExpiredToken;
     const res = await get_request(`${this.base_url}/users/${uuid}`,
       { 'Authorization': `${token_type} ${token}`}
     );

@@ -1,8 +1,5 @@
 import { get_request, post_request } from "../utils/axios";
-
-const ErrFailAuth = new Error('User authorization failed');
-const ErrFailRegister = new Error('Application registration failed');
-const ErrInvalidToken = new Error('No Authorization token available');
+import { ErrRally } from "../utils/errors";
 
 class RallyClient {
 
@@ -32,7 +29,7 @@ class RallyClient {
 
   isValidToken() {
     if (!this.access_token) return false;
-    if (Date.now() > this.expiry) return false;
+    if (Date.now() > this.expiry) { this.clearAuth(); return false; }
     return true;
   }
 
@@ -49,7 +46,7 @@ class RallyClient {
     } else {
       this.clearAuth();
       console.log('registration failed');
-      throw ErrFailRegister;
+      throw ErrRally.FailRegister;
     }
   }
 
@@ -61,7 +58,7 @@ class RallyClient {
 
   async authorize() {
     console.log('/authorize');
-    if (!this.isValidToken()) throw ErrInvalidToken; // Caller handles by calling `register()`
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     const res = await post_request(`${this.v1_url}/oauth/authorize`, 
       { callback: this.callback_url }, 
       { Authorization: `${this.token_type} ${this.access_token}` }
@@ -71,14 +68,14 @@ class RallyClient {
       return res.data.url;
     } else {
       console.log('User unauthenticated');
-      throw ErrFailAuth;
+      throw ErrRally.FailAuth;
     }
   }
 
   async userID(code) {
     console.log('/userID');
-    if (!this.isValidToken()) throw ErrInvalidToken; // Caller handles by calling `register()`
-    if (code === 'cancelled') throw ErrFailAuth;
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
+    if (code === 'cancelled') throw ErrRally.CancelAuth;
     const res = await post_request(`${this.v1_url}/oauth/userinfo`,
       { code: code },
       { Authorization: `${this.token_type} ${this.access_token}` }
@@ -88,13 +85,13 @@ class RallyClient {
       return res.data;
     } else {
       console.log('Callback failed');
-      throw ErrFailAuth;
+      throw ErrRally.FailAuth;
     }
   }
 
   async checkCreator(user) {
     console.log(`checking if ${user} is a creator`);
-    if (!this.isValidToken()) throw ErrInvalidToken; // Caller handles by calling `register()`
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     let res = await get_request(`${this.api_url}/creator-coins`,
       { Authorization: `${this.token_type} ${this.access_token}` },
       { size: 50 }

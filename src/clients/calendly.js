@@ -1,6 +1,5 @@
-import { calendlyClient } from ".";
-import { get_request, post_request } from "../utils/axios";
-import { ErrCalendly } from "../utils/errors";
+import { get_request, post_request } from "../utils/axios.js";
+import { ErrCalendly } from "../utils/errors.js";
 
 class CalendlyClient {
 

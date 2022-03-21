@@ -1,5 +1,5 @@
-import Calendly from './calendly';
-import Rally from './rally';
+import Calendly from './calendly.js';
+import Rally from './rally.js';
 
 // Reading the Rally client params from environment variables
 const base_url = process.env.RALLY_BASE_URL || "https://api.rally.io";
@@ -13,11 +13,11 @@ const callback_url = process.env.RALLY_CALLBACK;
 export const RallyClient = new Rally(username, password, base_url, v1_url, api_url, callback_url);
 
 // Reading the Calendly client params from environment variables
-const base_url = process.env.CALENDLY_BASE_URL || "https://api.calendly.com";
+const calendly_base = process.env.CALENDLY_BASE_URL || "https://api.calendly.com";
 const auth_url = process.env.CALENDLY_AUTH_URL || "https://auth.calendly.com";
 const client_id = process.env.CALENDLY_CLIENT_ID;
 const secret = process.env.CALENDLY_SECRET;
 const callback = process.env.CALENDLY_CALLBACK;;
 
 // API client for interacting with the Calendly API
-export const CalendlyClient = new Calendly(client_id, secret, auth_url, base_url, callback);
+export const CalendlyClient = new Calendly(client_id, secret, auth_url, calendly_base, callback);

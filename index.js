@@ -1,8 +1,6 @@
-'use strict';
-
-require('dotenv').config();
-
 import mongoose from 'mongoose';
+import app from './src/app.js';
+import 'dotenv/config';
 
 try {
   // ensure `mongod` is running
@@ -13,7 +11,6 @@ try {
   console.log(err);
 }
 
-const { app } = require('./src/app');
 const port = parseInt(process.env.PORT) || 5555
 
 app.listen(port, () => {

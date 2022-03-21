@@ -1,6 +1,6 @@
 import express from "express";
-import { CalendlyClient } from '../clients';
-import { addToDB, updateDB } from "../db";
+import { CalendlyClient } from '../clients/index.js';
+import { addToDB, updateDB } from "../db/index.js";
 
 const router = express.Router();
 

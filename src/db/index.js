@@ -1,17 +1,18 @@
-import { CalendlyAccessModel } from './calendly';
-import { RallyUserModel } from './rally';
+import { CalendlyAccessModel } from './calendly.js';
+import { RallyUserModel } from './rally.js';
 
-import { ErrDB } from '../utils/errors';
+import { ErrDB } from '../utils/errors.js';
 
 export const addToDB = async (model, data) => {
+  let res = undefined;
   switch (model) {
     case 'CalendlyAccess':
-      let res = await CalendlyAccessModel.find({ owner: data.owner });
+      res = await CalendlyAccessModel.find({ owner: data.owner });
       if (res[0]) throw ErrDB.Exists;
       await CalendlyAccessModel.create(data);
       break;
     case 'RallyUser':
-      let res = await RallyUserModel.find({ userID: data.userID });
+      res = await RallyUserModel.find({ userID: data.userID });
       if (res[0]) throw ErrDB.Exists;
       await RallyUserModel.create(data);
       break;

@@ -1,5 +1,5 @@
-import { get_request, post_request } from "../utils/axios";
-import { ErrRally } from "../utils/errors";
+import { get_request, post_request } from "../utils/axios.js";
+import { ErrRally } from "../utils/errors.js";
 
 class RallyClient {
 

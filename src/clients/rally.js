@@ -1,3 +1,4 @@
+import e from "express";
 import { get_request, post_request } from "../utils/axios.js";
 import { ErrRally } from "../utils/errors.js";
 
@@ -42,6 +43,7 @@ class RallyClient {
     if (res.status == 200) {
       this.setAuth(res.data);
       console.log('successfully registered');
+      console.log(res.data)
       return true;
     } else {
       this.clearAuth();
@@ -103,7 +105,7 @@ class RallyClient {
     while (lastKey !== undefined) {
       let data = res.data;
       data.forEach((elem) => {
-        if (elem.creatorAccountId == user) return true;
+        if (elem.creatorAccountId == user) return elem.symbol;
       });
       res = await get_request(`${this.api_url}/creator-coins`,
         { Authorization: `${this.token_type} ${this.access_token}` },
@@ -115,6 +117,38 @@ class RallyClient {
   }
 
   balance(token) {
+
+  }
+
+  nfts(token) {
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
+    let res = await get_request(`${this.api_url}/nft-templates`,
+      { Authorization: `${this.token_type} ${this.access_token}` },
+      { creatorCoinSymbol: token, size: 50 }
+    );
+    if (res.status == 200) {
+      let data = [];
+      res.data.forEach( (nft) => {
+        data.push({ id: nft.id, title: nft.title });
+      });
+      let lastKey = res.headers['last-evaluated-key'];
+      while(lastKey !== undefined) {
+        res = await get_request(`${this.api_url}/nft-templates`,
+          { Authorization: `${this.token_type} ${this.access_token}` },
+          { creatorCoinSymbol: token, size: 50 , startKey: lastKey }
+        );
+        res.data.forEach( (nft) => {
+          data.push({ id: nft.id, title: nft.title });
+        });
+      }
+      return { data: data };
+    } else {
+      console.log('Error fetching nft templates');
+      return {}
+    }
+  }
+
+  nfts(networkID, nftID) {
 
   }
 

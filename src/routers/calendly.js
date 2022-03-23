@@ -1,6 +1,6 @@
 import express from "express";
 import { CalendlyClient } from '../clients/index.js';
-import { addToDB, updateDB } from "../db/index.js";
+import { addToDB, findInDB, updateDB } from "../db/index.js";
 
 const router = express.Router();
 
@@ -29,6 +29,17 @@ router.post('/refresh', async (req, res) => {
     let data = await CalendlyClient.refresh(doc.refresh_token);
     await updateDB('CalendlyAccess', { slug: user }, data);
     res.send(data.expires_at);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get('/events/:slug', async (req, res) => {
+  let user = req.query.slug;
+  try {
+    let doc = await findInDB('CalendlyAccess', { slug: user });
+    let data = await CalendlyClient.events(doc.token_type, doc.access_token, doc.owner);
+    res.json(data);
   } catch (err) {
     console.log(err);
   }

@@ -1,0 +1,56 @@
+<div class="container-fluid" id="createEventBlock">
+
+  <div class="container" id="createButton">
+    <p>
+      <button class="btn btn-large btn-outline-light" onclick="">Create new event</button>
+    </p>
+  </div>
+  
+  <div class="container" id="createForm">
+    <form name="newEvent" method="post" action="/db/new-event">
+      <input type="hidden" name="formName" value="createNewEvent">
+      <input type="hidden" name="tokenSymbol" id="tokenSymbol">
+      <input type="radio" name="gateType" value="token">
+      <input type="radio" name="gateType" value="nft">
+      <select id="nftOptions"></select>
+      <input type="number" name="qty">
+      <select id="eventOptions"></select>
+      <input type="submit" name="submit" value="submit">
+    </form>
+  </div>
+
+</div>
+
+<script>
+  // display Create Event only for creators
+  if (sessionStorage.isCreator == 'false' || sessionStorage.calendlySlug == undefined) {
+    $('#createEventBlock').css('display', 'none');
+  } else {
+    $('#createEventBlock').css('display', 'block');
+    $('#tokenSymbol').val(sessionStorage.isCreator);
+    $.ajax({
+      method: 'GET',
+      url: `/rally/nfts/${sessionStorage.isCreator}`
+    }).then( (data) => {
+      data.forEach((nft) => {
+        $('#nftOptions').append('<option>', {
+          value: nft.id,
+          text: nft.title
+        });
+      });
+    });
+    $.ajax({
+      method: 'GET',
+      url: `/calendly/events/${sessionStorage.calendlySlug}`
+    }).then( (data) => {
+      data.forEach((event) => {
+        $('#eventOptions').append('<option>', {
+          value: event.uri,
+          text: event.name
+        });
+      });
+    });
+  }
+
+
+</script>

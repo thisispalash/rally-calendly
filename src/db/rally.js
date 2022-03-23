@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const RallyUserSchema = new mongoose.Schema({
   userID: String,
   networkID: String,
-  isCreator: Boolean
+  isCreator: String
 });
 
 export const RallyUserModel = mongoose.model('rally_user', RallyUserSchema);

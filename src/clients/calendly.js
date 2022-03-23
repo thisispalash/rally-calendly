@@ -1,3 +1,4 @@
+import e from "express";
 import { get_request, post_request } from "../utils/axios.js";
 import { ErrCalendly } from "../utils/errors.js";
 
@@ -26,8 +27,9 @@ class CalendlyClient {
       console.log('Calendly access token received..');
       let data = {};
       data.token_type = res.data.token_type;
-      data.created_at = new Date(res.data.created_at);
-      data.expires_at = new Date(res.data.created_at + res.data.expires_in * 1000);
+      // provided in seconds, not miliseconds
+      data.created_at = new Date(res.data.created_at * 1000);
+      data.expires_at = new Date((res.data.created_at + res.data.expires_in) * 1000);
       data.access_token = res.data.access_token;
       data.refresh_token = res.data.refresh_token;
       data.owner = res.data.owner.split('/').slice(-1)[0];
@@ -81,6 +83,37 @@ class CalendlyClient {
       return data;
     } else {
       console.log('Error in fetching user');
+      return {}
+    }
+  }
+
+  async getEvents(token_type, token, uuid) {
+    if (!this.isValidToken) throw ErrCalendly.ExpiredToken;
+    // TODO turn into `do=while`
+    let res = await get_request(`${this.base_url}/event_types`,
+      { 'Authorization': `${token_type} ${token}`},
+      { active: true, user: `${this.base_url}/users/${uuid}`, count: 100 }
+    );
+    if (res.status == 200) {
+      let data = [];
+      res.data.collection.forEach( (event) => {
+        data.push({ 
+          uri: event.uri.split('/').slice(-1)[0],
+          name: event.name
+        });
+      });
+      while (res.data.pagination.next_page) {
+        res = await get_request(res.data.pagination.next_page);
+        res.data.collection.forEach( (event) => {
+          data.push({ 
+            uri: event.uri.split('/').slice(-1)[0],
+            name: event.name
+          });
+        });
+      }
+      return { data: data };
+    } else {
+      console.log('Error in fetching event types');
       return {}
     }
   }

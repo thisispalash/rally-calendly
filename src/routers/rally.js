@@ -34,4 +34,14 @@ router.get('/callback', async (req, res) => {
   }
 });
 
+router.get('/nfts/:token', async (req, res) => {
+  let token = req.query.token;
+  try {
+    let data = await RallyClient.nfts(token);
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 export default router;

@@ -7,10 +7,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/home', (req, res) => {
-  console.log('going home..')
-  let data = req.body;
-  if (data.isCreator === 'true') res.render('creator');
-  else res.render('user');
+  console.log('going home..');
+  res.render('home');
 });
 
 // Breaking changes

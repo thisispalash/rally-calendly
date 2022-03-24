@@ -97,6 +97,7 @@ class CalendlyClient {
     if (res.status == 200) {
       let data = [];
       res.data.collection.forEach( (event) => {
+        if (!event.active) return;
         data.push({ 
           uri: event.uri.split('/').slice(-1)[0],
           name: event.name
@@ -105,16 +106,17 @@ class CalendlyClient {
       while (res.data.pagination.next_page) {
         res = await get_request(res.data.pagination.next_page);
         res.data.collection.forEach( (event) => {
+          if (!event.active) return;
           data.push({ 
             uri: event.uri.split('/').slice(-1)[0],
             name: event.name
           });
         });
       }
-      return { data: data };
+      return data;
     } else {
       console.log('Error in fetching event types');
-      return {}
+      return [];
     }
   }
 

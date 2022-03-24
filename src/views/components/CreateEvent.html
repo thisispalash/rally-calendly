@@ -1,16 +1,19 @@
 <div class="container-fluid" id="createEventBlock">
 
-  <div class="container" id="createButton">
+  <div class="container" id="createNewEventButton">
     <p>
-      <button class="btn btn-large btn-outline-light" onclick="">Create new event</button>
+      <button class="btn btn-large btn-outline-light" onclick="showNewEventForm()">Create new event</button>
     </p>
   </div>
   
-  <div class="container" id="createForm">
+  <div class="container" id="createNewEventForm">
+    <!-- TODO Add labels -->
     <form name="newEvent" method="post" action="/db/new-event">
       <input type="hidden" name="formName" value="createNewEvent">
       <input type="hidden" name="tokenSymbol" id="tokenSymbol">
-      <input type="radio" name="gateType" value="token">
+      <input type="hidden" name="calendlySlug" id="calendlySlug">
+      <input type="text" name="gateName" id="gateName">
+      <input type="radio" name="gateType" value="token" checked>
       <input type="radio" name="gateType" value="nft">
       <select id="nftOptions"></select>
       <input type="number" name="qty">
@@ -21,8 +24,19 @@
 
 </div>
 
+<script> /* functions */
+  function showNewEventForm() {
+    if (!sessionStorage.calendlySlug) {
+      alert('Please log into calendly first!')
+    } else {
+      $('#createNewEventForm').css('display', 'block');
+      $('#createNewEventButton').css('display', 'none');
+    }
+  }
+</script>
+
 <script>
-  // display Create Event only for creators
+  // display Create Event only for creators and after calendly login
   if (sessionStorage.isCreator == 'false' || sessionStorage.calendlySlug == undefined) {
     $('#createEventBlock').css('display', 'none');
   } else {
@@ -33,10 +47,8 @@
       url: `/rally/nfts/${sessionStorage.isCreator}`
     }).then( (data) => {
       data.forEach((nft) => {
-        $('#nftOptions').append('<option>', {
-          value: nft.id,
-          text: nft.title
-        });
+        $('#nftOptions')
+          .append(`<option value="${nft.id}">${nft.title}</option>`);
       });
     });
     $.ajax({
@@ -44,13 +56,30 @@
       url: `/calendly/events/${sessionStorage.calendlySlug}`
     }).then( (data) => {
       data.forEach((event) => {
-        $('#eventOptions').append('<option>', {
-          value: event.uri,
-          text: event.name
-        });
+        $('#eventOptions')
+          .append(`<option value="${event.uri}">${event.name}</option>`);
       });
     });
   }
+</script>
 
+<script> /* submit form */
+
+  $('#createNewEventForm').on('submit', (event) => {
+    event.preventDefault();
+    // Open modal to confirm
+    // display server response
+
+    let form = $(this);
+    let url = form.attr('action');
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: form.serialize()
+    }).then( (msg) => {
+      
+    })
+  });
 
 </script>

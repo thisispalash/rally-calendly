@@ -120,7 +120,7 @@ class RallyClient {
 
   }
 
-  nfts(token) {
+  async nfts(token) {
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     let res = await get_request(`${this.api_url}/nft-templates`,
       { Authorization: `${this.token_type} ${this.access_token}` },
@@ -141,10 +141,10 @@ class RallyClient {
           data.push({ id: nft.id, title: nft.title });
         });
       }
-      return { data: data };
+      return data;
     } else {
       console.log('Error fetching nft templates');
-      return {}
+      return [];
     }
   }
 

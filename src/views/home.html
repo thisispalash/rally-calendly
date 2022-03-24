@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <header class="mb-auto py-2 mt-3">
-    <div class="container">
+    <div class="container" id="rallyInfo">
       <div class="row">
         <div class="col">
           <p class="lead">Username : <span id="username"></span></p>
@@ -16,7 +16,9 @@
     <hr>
   </header>
 
-  <main></main>
+  <main>
+    <%- include('components/CreateEvent.html') -%>
+  </main>
 
   <footer class="mt-auto"></footer>
 

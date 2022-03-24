@@ -35,10 +35,10 @@ router.post('/refresh', async (req, res) => {
 });
 
 router.get('/events/:slug', async (req, res) => {
-  let user = req.query.slug;
+  let user = req.params.slug;
   try {
     let doc = await findInDB('CalendlyAccess', { slug: user });
-    let data = await CalendlyClient.events(doc.token_type, doc.access_token, doc.owner);
+    let data = await CalendlyClient.getEvents(doc.token_type, doc.access_token, doc.owner);
     res.json(data);
   } catch (err) {
     console.log(err);

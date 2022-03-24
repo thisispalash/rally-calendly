@@ -30,7 +30,7 @@ export const updateDB = async (model, filter, data) => {
 export const findInDB = async (model, query) => {
   switch (model) {
     case 'CalendlyAccess':
-      let data = CalendlyAccessModel.findOne(query);
+      let data = await CalendlyAccessModel.findOne(query);
       if (!data) throw ErrDB.NotFound;
       return data;
   }

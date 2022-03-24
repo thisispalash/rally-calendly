@@ -18,7 +18,7 @@
 - [x] Login with Rally
 - [x] Add Calendly OAuth
 - [x] Setup db
-- [ ] Pull and store events
+- [x] Pull and store events
 - [ ] Show events from db
 - [ ] Book a available timeslot
 - [ ] Configure CI/CD with Heroku

@@ -11,10 +11,4 @@ router.post('/home', (req, res) => {
   res.render('home');
 });
 
-// Breaking changes
-
-router.get('/calendly-callback', (req, res) => {
-  res.redirect(`/calendly/callback?code=${req.query.code}`);
-});
-
 export default router;

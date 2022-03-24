@@ -5,10 +5,10 @@
     <div class="container" id="rallyInfo">
       <div class="row">
         <div class="col">
-          <p class="lead">Username : <span id="username"></span></p>
+          <p class="lead">Username : <span id="rallyUserID"></span></p>
         </div>
         <div class="col">
-          <p class="lead">Network ID : <span id="rnbUserId"></span></p>
+          <p class="lead">Network ID : <span id="rallyNetworkID"></span></p>
         </div>
       </div>
     </div>
@@ -27,8 +27,8 @@
 <!-- TODO display balances -->
 
 <script>
-  $('#username').html(sessionStorage.getItem('rally-userID'));
-  $('#rnbUserId').html(sessionStorage.getItem('rally-networkID'));
+  $('span#rallyUserID').html(sessionStorage.rallyUserID);
+  $('span#rallyNetworkID').html(sessionStorage.rallyNetworkID);
 </script>
 
 <%- include('components/tail.html') -%>

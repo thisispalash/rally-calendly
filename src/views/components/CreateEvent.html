@@ -26,10 +26,13 @@
       </div>
       
       <div class="modal-body lead" id="createNewEventModalBody">
+        <!-- TODO Client Side Form Validation -->
+        <!-- https://getbootstrap.com/docs/4.0/components/forms/#supported-elements -->
         <form action="/events/new" method="post" id="createNewEventForm">
           <input type="hidden" name="formName" value="createNewEvent">
           <input type="hidden" name="calendlySlug" id="calendlySlug">
           <input type="hidden" name="tokenSymbol" id="tokenSymbol">
+          <input type="hidden" name="rallyNetworkID" id="rallyNetworkID">
           <div class="form-group row mb-3 px-3">
             <label for="gateName" class="col-sm-2 col-form-label">Gate Name</label>
             <div class="col-sm-10">
@@ -40,11 +43,11 @@
             <label class="col-sm-2 col-form-label">Gate Type</label>
             <div class="col-sm-10">
               <div class="form-check form-check-inline">
-                <input type="radio" name="gateType" id="gateTypeToken" value="token" class="custom-control-input">
+                <input type="radio" name="gateType" id="gateTypeToken" value="token" class="custom-control-input" required>
                 <label for="gateTypeToken">$<span id="tokenSymbolModalRadio"></span> Tokens</label>
               </div>
               <div class="form-check form-check-inline">
-                <input type="radio" name="gateType" id="gateTypeNFT" value="nft" class="custom-control-input">
+                <input type="radio" name="gateType" id="gateTypeNFT" value="nft" class="custom-control-input" required>
                 <label for="gateTypeNFT">NFTs</label>
               </div>
             </div>
@@ -52,27 +55,32 @@
           <div class="form-group row mb-3 px-3" id="nftOptionsDiv" style="display: none;">
             <label for="nftOptions" class="col-sm-2 form-label">NFT Title</label>
             <div class="col-sm-10">
-              <select id="nftOptions" class="custom-select form-control"></select>
+              <select name="nftOptions" id="nftOptions" class="custom-select form-control">
+                <option value="">Select a NFT as gatekeeper</option>
+              </select>
             </div>
           </div>
           <div class="form-group row mb-3 px-3">
             <label for="minHeldQty" class="col-sm-2 form-label">Quantity</label>
             <div class="col-sm-10">
-              <input type="number" name="qty" id="minHeldQty" class="form-control">
+              <input type="number" name="qty" id="minHeldQty" class="form-control" required>
             </div>
           </div>
           <div class="form-group row mb-3 px-3">
             <label for="eventOptions" class="col-sm-2 form-label">Calendly Event</label>
             <div class="col-sm-10">
-              <select id="eventOptions" class="col-sm-10 custom-select form-control"></select>
+              <select name="eventOptions" id="eventOptions" class="custom-select form-control" required>
+                <option value="">Select the Calendly Event dedicated for the meet</option>
+              </select>
             </div>
           </div>
-        </form>
-      </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-outline-light" onclick="submitNewEventForm()">Submit</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <input type="submit" class="btn btn-outline-light" value="Submit">
+          </div>
+
+        </form>
       </div>
 
     </div>
@@ -89,14 +97,27 @@
     } else {
       $('#createNewEventPre').hide();
       $('#createNewEventButton').show();
+
       $('input#tokenSymbol').val(sessionStorage.isCreator);
       $('input#calendlySlug').val(sessionStorage.calendlySlug);
+      $('input#rallyNetworkID').val(sessionStorage.rallyNetworkID);
+      
       $('span#tokenSymbolModalRadio').html(sessionStorage.isCreator);
+      
       $('input[name="gateType"]').on('click', () => {
         let val = $('input[name="gateType"]:checked').val();
-        if (val === 'nft') $('#nftOptionsDiv').show();
-        else $('#nftOptionsDiv').hide();
+        if (val === 'nft') {
+          $('#nftOptionsDiv').show();
+          $('input#nftOptions').attr('required', true);
+          $('input#minHeldQty').val(1);
+        }
+        else {
+          $('#nftOptionsDiv').hide();
+          $('input#nftOptions').attr('required', false);
+          $('input#minHeldQty').val('');
+        }
       })
+      
       $.ajax({
         method: 'GET',
         url: `/rally/nfts/${sessionStorage.isCreator}`
@@ -106,6 +127,7 @@
             .append(`<option value="${nft.id}">${nft.title}</option>`);
         });
       });
+      
       $.ajax({
         method: 'GET',
         url: `/calendly/events/${sessionStorage.calendlySlug}`
@@ -122,20 +144,18 @@
 
 <script> /* submit form */
 
-  function submitNewEventForm() {
+  $('form#createNewEventForm').on('submit', (e) => {
+    e.preventDefault();
     let form = $('form#createNewEventForm');
-    let url = form.attr('action');
-  
-    console.log(form.serialize())
-  
-    // TODO
+    console.log(form);
     $.ajax({
       type: 'POST',
-      url: url,
+      url: form.attr('action'),
       data: form.serialize()
     }).then( (msg) => {
-      
-    })
-  }
-  
+      $('#createNewEventModalBody')
+        .html(`<p class="lead">${msg}</p>`);
+    });
+  });
+
 </script>

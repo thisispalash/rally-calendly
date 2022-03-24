@@ -148,10 +148,6 @@ class RallyClient {
     }
   }
 
-  nfts(networkID, nftID) {
-
-  }
-
 }
 
 export default RallyClient;

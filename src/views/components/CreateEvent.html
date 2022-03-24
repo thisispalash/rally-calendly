@@ -1,78 +1,134 @@
 <div class="container-fluid" id="createEventBlock">
 
-  <div class="container" id="createNewEventButton">
-    <p>
-      <button class="btn btn-large btn-outline-light" onclick="showNewEventForm()">Create new event</button>
-    </p>
+  <div class="container" id="createNewEventPre">
+    <p class="lead">Please connect your Calendly account by clicking the button above.</p>
   </div>
   
-  <div class="container" id="createNewEventForm">
-    <!-- TODO Add labels -->
-    <form name="newEvent" method="post" action="/db/new-event">
-      <input type="hidden" name="formName" value="createNewEvent">
-      <input type="hidden" name="tokenSymbol" id="tokenSymbol">
-      <input type="hidden" name="calendlySlug" id="calendlySlug">
-      <input type="text" name="gateName" id="gateName">
-      <input type="radio" name="gateType" value="token" checked>
-      <input type="radio" name="gateType" value="nft">
-      <select id="nftOptions"></select>
-      <input type="number" name="qty">
-      <select id="eventOptions"></select>
-      <input type="submit" name="submit" value="submit">
-    </form>
+  <div class="container" id="createNewEventButton">
+    <p>
+      <button class="btn btn-large btn-outline-light" data-bs-toggle="modal" data-bs-target="#createNewEventModal">
+        Create new event
+      </button>
+    </p>
   </div>
 
 </div>
 
-<script> /* functions */
-  function showNewEventForm() {
+<div class="modal fade" id="createNewEventModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark text-white">
+
+      <div class="modal-header">
+        <h5 class="display-6">Create New Gated Event</h5>
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body lead" id="createNewEventModalBody">
+        <form action="/events/new" method="post" id="createNewEventForm">
+          <input type="hidden" name="formName" value="createNewEvent">
+          <input type="hidden" name="calendlySlug" id="calendlySlug">
+          <input type="hidden" name="tokenSymbol" id="tokenSymbol">
+          <div class="form-group row mb-3 px-3">
+            <label for="gateName" class="col-sm-2 col-form-label">Gate Name</label>
+            <div class="col-sm-10">
+              <input type="text" name="gateName" id="gateName" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group row mb-3 px-3">
+            <label class="col-sm-2 col-form-label">Gate Type</label>
+            <div class="col-sm-10">
+              <div class="form-check form-check-inline">
+                <input type="radio" name="gateType" id="gateTypeToken" value="token" class="custom-control-input">
+                <label for="gateTypeToken">$<span id="tokenSymbolModalRadio"></span> Tokens</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="radio" name="gateType" id="gateTypeNFT" value="nft" class="custom-control-input">
+                <label for="gateTypeNFT">NFTs</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row mb-3 px-3" id="nftOptionsDiv" style="display: none;">
+            <label for="nftOptions" class="col-sm-2 form-label">NFT Title</label>
+            <div class="col-sm-10">
+              <select id="nftOptions" class="custom-select form-control"></select>
+            </div>
+          </div>
+          <div class="form-group row mb-3 px-3">
+            <label for="minHeldQty" class="col-sm-2 form-label">Quantity</label>
+            <div class="col-sm-10">
+              <input type="number" name="qty" id="minHeldQty" class="form-control">
+            </div>
+          </div>
+          <div class="form-group row mb-3 px-3">
+            <label for="eventOptions" class="col-sm-2 form-label">Calendly Event</label>
+            <div class="col-sm-10">
+              <select id="eventOptions" class="col-sm-10 custom-select form-control"></select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-light" onclick="submitNewEventForm()">Submit</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script> /* conditional displays and form prepopulation*/
+  if (sessionStorage.isCreator == 'false') {
+    $('#createEventBlock').hide();
+  } else {
     if (!sessionStorage.calendlySlug) {
-      alert('Please log into calendly first!')
+      $('#createNewEventPre').show();
+      $('#createNewEventButton').hide();
     } else {
-      $('#createNewEventForm').css('display', 'block');
-      $('#createNewEventButton').css('display', 'none');
+      $('#createNewEventPre').hide();
+      $('#createNewEventButton').show();
+      $('input#tokenSymbol').val(sessionStorage.isCreator);
+      $('input#calendlySlug').val(sessionStorage.calendlySlug);
+      $('span#tokenSymbolModalRadio').html(sessionStorage.isCreator);
+      $('input[name="gateType"]').on('click', () => {
+        let val = $('input[name="gateType"]:checked').val();
+        if (val === 'nft') $('#nftOptionsDiv').show();
+        else $('#nftOptionsDiv').hide();
+      })
+      $.ajax({
+        method: 'GET',
+        url: `/rally/nfts/${sessionStorage.isCreator}`
+      }).then( (data) => {
+        data.forEach((nft) => {
+          $('#nftOptions')
+            .append(`<option value="${nft.id}">${nft.title}</option>`);
+        });
+      });
+      $.ajax({
+        method: 'GET',
+        url: `/calendly/events/${sessionStorage.calendlySlug}`
+      }).then( (data) => {
+        data.forEach((event) => {
+          $('#eventOptions')
+            .append(`<option value="${event.uri}">${event.name}</option>`);
+        });
+      });
     }
   }
 </script>
 
-<script>
-  // display Create Event only for creators and after calendly login
-  if (sessionStorage.isCreator == 'false' || sessionStorage.calendlySlug == undefined) {
-    $('#createEventBlock').css('display', 'none');
-  } else {
-    $('#createEventBlock').css('display', 'block');
-    $('#tokenSymbol').val(sessionStorage.isCreator);
-    $.ajax({
-      method: 'GET',
-      url: `/rally/nfts/${sessionStorage.isCreator}`
-    }).then( (data) => {
-      data.forEach((nft) => {
-        $('#nftOptions')
-          .append(`<option value="${nft.id}">${nft.title}</option>`);
-      });
-    });
-    $.ajax({
-      method: 'GET',
-      url: `/calendly/events/${sessionStorage.calendlySlug}`
-    }).then( (data) => {
-      data.forEach((event) => {
-        $('#eventOptions')
-          .append(`<option value="${event.uri}">${event.name}</option>`);
-      });
-    });
-  }
-</script>
 
 <script> /* submit form */
 
-  $('#createNewEventForm').on('submit', (event) => {
-    event.preventDefault();
-    // Open modal to confirm
-    // display server response
-
-    let form = $(this);
+  function submitNewEventForm() {
+    let form = $('form#createNewEventForm');
     let url = form.attr('action');
-
+  
+    console.log(form.serialize())
+  
+    // TODO
     $.ajax({
       type: 'POST',
       url: url,
@@ -80,6 +136,6 @@
     }).then( (msg) => {
       
     })
-  });
-
+  }
+  
 </script>

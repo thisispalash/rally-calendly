@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import ejs from 'ejs';
 
-import dbRouter from './routers/db.js';
 import coreRouter from './routers/core.js';
+import eventRouter from './routers/events.js';
 import rallyRouter from './routers/rally.js';
 import calendlyRouter from './routers/calendly.js';
 
@@ -20,8 +20,8 @@ app.use('/static', express.static(path.join(path.join(process.cwd(), 'src'), 'pu
 
 // routes
 app.use('/', coreRouter);
-app.use('/db', dbRouter);
 app.use('/rally', rallyRouter);
+app.use('/events', eventRouter);
 app.use('/calendly', calendlyRouter);
 
 export default app;

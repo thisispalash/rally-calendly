@@ -1,6 +1,6 @@
 <div class="container" id="calendlyLogin">
   <button class="btn btn-large btn-outline-light" onclick="loginCalendly()">Calendly Login</button>
-  <form method="post" action="/home">
+  <form method="post" action="/home" id="calendlyLoginForm">
     <input name="formName" type="hidden" value="calendlySlug">
     <input name="isCreator" type="hidden" id="isCreator">
     <input name="slug" type="hidden" id="slug">
@@ -16,7 +16,7 @@
     sessionStorage.setItem('calendlySlug', slug);
     $('#isCreator').val(sessionStorage.getItem('isCreator'));
     $('#slug').val(slug);
-    $('form').submit();
+    $('form#calendlyLoginForm').submit();
     // TODO Ajax form submit
   }
 </script>

@@ -87,7 +87,8 @@
   </div>
 </div>
 
-<script> /* conditional displays and form prepopulation*/
+<script> /* conditional displays */
+
   if (sessionStorage.isCreator == 'false') {
     $('#createEventBlock').hide();
   } else {
@@ -97,50 +98,40 @@
     } else {
       $('#createNewEventPre').hide();
       $('#createNewEventButton').show();
-
-      $('input#tokenSymbol').val(sessionStorage.isCreator);
-      $('input#calendlySlug').val(sessionStorage.calendlySlug);
-      $('input#rallyNetworkID').val(sessionStorage.rallyNetworkID);
-      
-      $('span#tokenSymbolModalRadio').html(sessionStorage.isCreator);
-      
-      $('input[name="gateType"]').on('click', () => {
-        let val = $('input[name="gateType"]:checked').val();
-        if (val === 'nft') {
-          $('#nftOptionsDiv').show();
-          $('input#nftOptions').attr('required', true);
-          $('input#minHeldQty').val(1);
-        }
-        else {
-          $('#nftOptionsDiv').hide();
-          $('input#nftOptions').attr('required', false);
-          $('input#minHeldQty').val('');
-        }
-      })
-      
-      $.ajax({
-        method: 'GET',
-        url: `/rally/nfts/${sessionStorage.isCreator}`
-      }).then( (data) => {
-        data.forEach((nft) => {
-          $('#nftOptions')
-            .append(`<option value="${nft.id}">${nft.title}</option>`);
-        });
-      });
-      
-      $.ajax({
-        method: 'GET',
-        url: `/calendly/events/${sessionStorage.calendlySlug}`
-      }).then( (data) => {
-        data.forEach((event) => {
-          $('#eventOptions')
-            .append(`<option value="${event.uri}">${event.name}</option>`);
-        });
-      });
     }
   }
+
 </script>
 
+<script> /* form behaviour */
+
+  $('#createNewEventModalBody input[name="gateType"]').on('click', () => {
+    let val = $('input[name="gateType"]:checked').val();
+    if (val === 'nft') {
+      $('#createNewEventModalBody #nftOptionsDiv').show();
+      $('#createNewEventModalBody input#nftOptions').attr('required', true);
+      $('#createNewEventModalBody input#minHeldQty').val(1);
+    }
+    else {
+      $('#createNewEventModalBody #nftOptionsDiv').hide();
+      $('#createNewEventModalBody input#nftOptions').attr('required', false);
+      $('#createNewEventModalBody input#minHeldQty').val('');
+    }
+  });
+  
+</script>
+
+<script> /* add hidden values */
+
+  $('#createNewEventModal').on('show.bs.modal', (event) => {
+    $('#createNewEventModalBody input#tokenSymbol').val(sessionStorage.isCreator);
+    $('#createNewEventModalBody input#calendlySlug').val(sessionStorage.calendlySlug);
+    $('#createNewEventModalBody input#rallyNetworkID').val(sessionStorage.rallyNetworkID);
+    
+    $('#createNewEventModalBody span#tokenSymbolModalRadio').html(sessionStorage.isCreator);
+  });
+
+</script>
 
 <script> /* submit form */
 
@@ -155,6 +146,7 @@
     }).then( (msg) => {
       $('#createNewEventModalBody')
         .html(`<p class="lead">${msg}</p>`);
+      showCreatedEvents(sessionStorage.isCreator);
     });
   });
 

@@ -47,5 +47,9 @@ export const findInDB = async (model, query) => {
       data = await GatedEventModel.findOne(query);
       if (!data) throw ErrDB.NotFound;
       return data;
+    case 'GatedEventAll':
+      data = await GatedEventModel.find(query);
+      if (!data) throw ErrDB.NotFound;
+      return data;
   }
 }

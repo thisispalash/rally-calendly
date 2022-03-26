@@ -18,6 +18,18 @@
 
   <main>
     <%- include('components/CreateEvent.html') -%>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <h4 class="card-title">Others' Events</h4>
+          <%- include('components/GatedEvents.html') -%>
+        </div>
+        <div class="col">
+          <h4 class="card-title">Your Events</h4>
+          <%- include('components/CreatedEvents.html') -%>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer class="mt-auto"></footer>
@@ -29,6 +41,11 @@
 <script>
   $('span#rallyUserID').html(sessionStorage.rallyUserID);
   $('span#rallyNetworkID').html(sessionStorage.rallyNetworkID);
+</script>
+
+<script src="/static/js/forms.js"></script>
+<script>
+  prePopuluateEventForms();
 </script>
 
 <%- include('components/tail.html') -%>

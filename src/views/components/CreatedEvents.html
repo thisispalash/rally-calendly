@@ -76,6 +76,12 @@
   </div>
 </div>
 
+<script>
+  if(sessionStorage.isCreator === 'false') {
+    $('#createdEventsDiv').hide();
+  }
+</script>
+
 <script> /* form behaviour */
 
   $('#editEventModalBody input[name="gateType"]').on('click', () => {

@@ -120,6 +120,21 @@ class CalendlyClient {
     }
   }
 
+  async getSchedulingLink(token_type, token, event) {
+    if (!this.isValidToken) throw ErrCalendly.ExpiredToken;
+    let res = await post_request(`${this.base_url}/scheduling_links`, 
+      { max_event_count: 1, owner_type: 'EventType', owner: `${this.base_url}/event_types/${event}`},
+      { 'Authorization': `${token_type} ${token}`}
+    );
+    if (res.status == 201) {
+      return res.data.resource.booking_url;
+    } else {
+      console.log('Error in getting single schedule link');
+      console.log(res.data);
+      return undefined;
+    }
+  }
+
 }
 
 export default CalendlyClient;

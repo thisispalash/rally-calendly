@@ -13,5 +13,10 @@ const GatedEventSchema = new mongoose.Schema({
 export const GatedEventModel = mongoose.model('gated_event', GatedEventSchema);
 
 const AttendeeSchema = new mongoose.Schema({
-  
+  eventID: String,
+  rallyUserID: String,
+  schedule: String,
+  invitee: String
 });
+
+export const AttendeeModel = mongoose.model('event_attendee', AttendeeSchema);

@@ -1,4 +1,5 @@
 import e from "express";
+import { reset } from "nodemon";
 import { get_request, post_request } from "../utils/axios.js";
 import { ErrRally } from "../utils/errors.js";
 
@@ -116,8 +117,18 @@ class RallyClient {
     return false;
   }
 
-  balance(token) {
-
+  async balance(user, token) {
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
+    const res = await get_request(`${this.api_url}/rally-network-wallets/${user}`,
+      { Authorization: `${this.token_type} ${this.access_token}` },
+      { symbolSearch: token }
+    );
+    if (res.status == 200) {
+      return res.data[0].amount / 10 ** res.data[0].scale;
+    } else {
+      console.log(res.data);
+      return -1;
+    }
   }
 
   async nfts(token) {
@@ -145,6 +156,18 @@ class RallyClient {
     } else {
       console.log('Error fetching nft templates');
       return [];
+    }
+  }
+
+  async isOwned(user, nft) {
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
+    const res = await get_request(`${this.api_url}/nfts/${nft}`);
+    if (res.status == 200) {
+      if (res.data.rallyNetworkWalletId == user) return true;
+      else return false;
+    } else {
+      console.log(res.data);
+      return false;
     }
   }
 

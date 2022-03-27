@@ -45,4 +45,18 @@ router.get('/events/:slug', async (req, res) => {
   }
 });
 
+router.get('/single/:slug/:id', async (req, res) => {
+  let slug = req.params.slug;
+  let id = req.params.id;
+  console.log(slug, id)
+  try {
+    let access = await findInDB('CalendlyAccess', { slug: slug });
+    let event = await findInDB('GatedEvent', { _id: id });
+    let url = await CalendlyClient.getSchedulingLink(access.token_type, access.access_token, event.calendly);
+    res.send(url);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 export default router;

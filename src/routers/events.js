@@ -10,7 +10,6 @@ router.post('/new', async (req, res) => {
   //   res.send(`Unauthorized to schedule an event for ${data.tokenSymbol}`);
   //   return;
   // }
-  console.log(data);
   try {
     await findInDB('GatedEvent', { calendly: data.eventOptions }); // throws ErrDB.NotFound if doc not found
     res.send('Gated event for the selected event type already exists');
@@ -29,8 +28,13 @@ router.post('/new', async (req, res) => {
   }
 });
 
-router.get('/all/:token', async (req, res) => {
+router.get('/get/:token', async (req, res) => {
   let token = req.params.token;
+  console.log(`fetching events for ${token}`)
+  if (token === 'false') {
+    res.json([]);
+    return;
+  }
   try {
     let data = await findInDB('GatedEventAll', { token: token });
     res.json(data);
@@ -39,10 +43,28 @@ router.get('/all/:token', async (req, res) => {
   }
 });
 
+router.get('/all/:token', async (req, res) => {
+  let token = req.params.token;
+  try {
+    let data = await findInDB('GatedEventAll', {});
+    if (token == 'false') {
+      res.json(data);
+      return;
+    }
+    let ret = [];
+    data.forEach( doc => {
+      if (doc.token == token) return;
+      ret.push(doc);
+    })
+    res.json(ret);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 router.post('/update/:id', async (req,res) => {
   let id = req.params.id;
   let data = req.body;
-  console.log(data)
   let doc = {
     name: data.gateName,
     slug: data.calendlySlug,
@@ -56,8 +78,22 @@ router.post('/update/:id', async (req,res) => {
   res.send(`updated event ${data.name}`);
 });
 
-router.post('/schedule', async (req, res) => {
-
+router.post('/schedule/:id', async (req, res) => {
+  let id = req.params.id;
+  let data = req.body;
+  let doc = {
+    eventID: id,
+    rallyUserID: data.rallyUserID,
+    schedule: data.calendlyScheduledEvent,
+    invitee: data.calendlyScheduledInvitee
+  }
+  try {
+    await addToDB('EventAttendee', doc);
+    res.send('Invitee successfully added to db');
+  } catch (err) {
+    console.log(err);
+    res.send('Error occurred in adding to DB');
+  }
 });
 
 export default router;

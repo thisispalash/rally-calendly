@@ -44,4 +44,17 @@ router.get('/nfts/:token', async (req, res) => {
   }
 });
 
+router.get('/balance/:networkID/:asset/:identifier', async (req, res) => {
+  let user = req.params.networkID;
+  let asset = req.params.asset;
+  let identifier = req.params.identifier;
+  if (asset === 'token') {
+    let bal = await RallyClient.balance(user, identifier);
+    res.json({ qty: bal });
+  } else {
+    let owned = await RallyClient.isOwned(user, identifier);
+    res.json({ owned: owned });
+  }
+});
+
 export default router;

@@ -1,6 +1,6 @@
 import { CalendlyAccessModel } from './calendly.js';
 import { RallyUserModel } from './rally.js';
-import { GatedEventModel } from './events.js';
+import { GatedEventModel, AttendeeModel } from './events.js';
 
 import { ErrDB } from '../utils/errors.js';
 
@@ -21,6 +21,11 @@ export const addToDB = async (model, data) => {
       res = await GatedEventModel.find({ calendly: data.calendly });
       if (res[0]) throw ErrDB.Exists;
       await GatedEventModel.create(data);
+      break;
+    case 'EventAttendee':
+      res = await AttendeeModel.find({ schedule: data.schedule });
+      if (res[0]) throw ErrDB.Exists;
+      await AttendeeModel.create(data);
       break;
   }
 }
@@ -49,6 +54,10 @@ export const findInDB = async (model, query) => {
       return data;
     case 'GatedEventAll':
       data = await GatedEventModel.find(query);
+      if (!data) throw ErrDB.NotFound;
+      return data;
+    case 'EventAttendee':
+      data = await GatedEventModel.findOne(query);
       if (!data) throw ErrDB.NotFound;
       return data;
   }

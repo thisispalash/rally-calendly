@@ -20,13 +20,14 @@
     <%- include('components/CreateEvent.html') -%>
     <div class="container-fluid">
       <div class="row">
-        <div class="col">
+        <div class="col" id="gatedEventsList">
           <h4 class="card-title">Others' Events</h4>
           <%- include('components/GatedEvents.html') -%>
         </div>
-        <div class="col">
+        <div class="col" id="selfEventsList">
           <h4 class="card-title">Your Events</h4>
           <%- include('components/CreatedEvents.html') -%>
+          <%- include('components/ScheduledEvents.html') -%>
         </div>
       </div>
     </div>
@@ -46,6 +47,7 @@
 <script src="/static/js/forms.js"></script>
 <script>
   prePopuluateEventForms();
+  showGatedEvents(sessionStorage.isCreated);
 </script>
 
 <%- include('components/tail.html') -%>

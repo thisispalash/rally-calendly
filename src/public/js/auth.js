@@ -20,11 +20,17 @@ function authenticateRally(data) {
 }
 
 function loginCalendly() {
-
+  console.log('logging into Calendly..');
+  window.open('/calendly/auth', '_blank', 'popup, height=750px, width=1250px');
 }
 
-function authenticateCalendly() {
-
+function authenticateCalendly(slug) {
+  sessionStorage.setItem('calendlySlug', slug);
+  $('form#calendlyLoginForm input#rallyUserID').val(sessionStorage.rallyUserID);
+  $('form#calendlyLoginForm input#rallyNetworkID').val(sessionStorage.rallyNetworkID);
+  $('form#calendlyLoginForm input#isCreator').val(sessionStorage.isCreator);
+  $('form#calendlyLoginForm input#calendlySlug').val(sessionStorage.calendlySlug);
+  $('form#calendlyLoginForm').submit();
 }
 
 function refreshCalendly() {

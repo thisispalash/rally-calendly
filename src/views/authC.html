@@ -1,12 +1,13 @@
-<%- include('components/head.html') -%>
-
-<p>
-  Successfully Authorized. Redirecting to Home..
-</p>
-
-<script>
-  opener.submitForm('<%= slug %>');
-  window.close();
-</script>
-
-<%- include('components/tail.html') -%>
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <p>
+      Successfully Authorized. Redirecting to Home..
+    </p>
+  </body>
+  <script>
+    opener.authenticateCalendly('<%= slug %>');
+    window.close();
+  </script>
+</html>

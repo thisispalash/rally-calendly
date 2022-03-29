@@ -1,0 +1,119 @@
+<%- include('components/head.html') -%>
+
+<div class="container-fluid d-flex flex-column">
+
+
+  <header class="mb-auto">
+
+    <div class="container" id="rallyInfo">
+      
+      <div class="row">
+        <div class="col">
+          <p class="lead">Rally UserID: <%= rallyUserID =></p>
+        </div>
+        <div class="col">
+          <p class="lead">Rally NetworkID: <%= rallyNetworkID =></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container" id="calendlyInfo">
+
+      <div class="container" id="calendlyLoginDiv">
+        <button class="btn btn-large btn-outline-light" onclick="loginCalendly()">Calendly Login</button>
+        <form method="post" action="/home" id="calendlyLoginForm">
+          <input name="formName" type="hidden" value="calendlyLoginForm">
+          <input name="rallyUserID" type="hidden" id="rallyUserID">
+          <input name="rallyNetworkID" type="hidden" id="rallyNetworkID">
+          <input name="isCreator" type="hidden" id="isCreator">
+          <input name="calendlySlug" type="hidden" id="calendlySlug">
+        </form>
+      </div>
+
+      <div class="container" id="calendlySlugDiv" style="display: none;">      
+        <p class="lead">Calendly: @<%= calendlySlug =></p>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="px-3">
+    <div class="container">
+
+      <div class="row" id="promptUserRow">
+        <p>Please connect your Calendly account by clicking the button above.</p>
+      </div>
+
+      <div class="row" id="mainButtonRow">
+        <div class="col" id="createButtonCol">
+          <button class="btn btn-large btn-outline-light" data-bs-toggle="modal" data-bs-target="#createEventModal">
+            Create New Gated Event
+          </button>
+        </div>
+
+        <div class="col" id="scheduleButtonCol">
+          <button class="btn btn-large btn-outline-light" data-bs-toggle="modal" data-bs-target="#scheduleEventModal">
+            Book A Gated Event
+          </button>
+        </div>
+      </div>
+
+      <div class="row" id="createdEventsRow">
+        <div class="col-2">
+          <p class="lead">Created Events:</p>
+        </div>
+        <div class="col" id="createdEventsList">
+          <p class="lead">No events created.</p>
+        </div>
+      </div>
+
+      <div class="row" id="scheduledEventsRow">
+        <div class="col-2">
+          <p class="lead">Scheduled Events:</p>
+        </div>
+        <div class="col" id="scheduledEventsList">
+          <p class="lead">No events scheduled.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="mt-auto"></footer>
+
+</div>
+
+<%- include('modals/createEventModal.html') -%>
+<%- include('modals/editEventModal.html') -%>
+<%- include('modals/scheduleEventModal.html') -%>
+<%- include('modals/viewEventModal.html') -%>
+
+<script>
+  if (sessionStorage.calendlySlug) {
+    $('header #calendlyLoginDiv').hide();
+    $('header #calendlySlugDiv').show();
+
+    $('main #promptUserRow').hide();
+    $('main #mainButtonRow').show();
+    $('main #createdEventsRow').show();
+    $('main #scheduledEventsRow').show();
+  } else {
+    $('header #calendlyLoginDiv').show();
+    $('header #calendlySlugDiv').hide();
+
+    $('main #promptUserRow').show();
+    $('main #mainButtonRow').hide();
+    $('main #createdEventsRow').hide();
+    $('main #scheduledEventsRow').hide();
+  }
+</script>
+
+<script>
+  if (sessionStorage.isCreator === 'false') {
+    $('main #createButtonCol').hide();
+    $('main #createdEventsRow').hide();
+  }
+</script>
+
+<%- include('components/tail.html') -%>

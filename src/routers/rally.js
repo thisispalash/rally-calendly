@@ -1,15 +1,23 @@
 import express from 'express';
 import { RallyClient } from '../clients/index.js';
 import { addToDB } from '../db/index.js';
+import { ErrRally } from '../utils/errors.js';
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
     let data = await RallyClient.register();
-    res.send(data);
+    res.status(200).send(data);
   } catch (err) {
-    console.log(err);
+    if (err == ErrRally.FailRegister) {
+      res.status(401).json({
+        message: 'Failed to register application. Please try again later.'
+      });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
   }
 });
 
@@ -18,7 +26,18 @@ router.get('/auth', async (req, res) => {
     let url = await RallyClient.authorize();
     res.redirect(url);
   } catch (err) {
-    console.log(err);
+    if (err == ErrRally.NoToken) {
+      let data = await RallyClient.register();
+      if (data) res.redirect('/auth');
+      else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
+    } else if (err == ErrRally.FailAuth) {
+      res.status(401).json({
+        message: 'User authentication failed. Please try again.'
+      });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
   }
 });
 
@@ -30,7 +49,22 @@ router.get('/callback', async (req, res) => {
     res.render('auth', data);
     await addToDB('RallyUser', data);
   } catch (err) {
-    console.log(err);
+    if (err == ErrRally.NoToken) {
+      let data = await RallyClient.register();
+      if (data) res.redirect(`/callback?code=${code}`);
+      else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
+    } else if (err == ErrRally.CancelAuth) {
+      res.status(401).json({
+        message: 'User cancelled authentication to application.'
+      });
+    } else if (err == ErrRally.FailAuth) {
+      res.status(401).json({
+        message: 'User authentication failed. Please try again.'
+      });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
   }
 });
 
@@ -40,7 +74,14 @@ router.get('/nfts/:token', async (req, res) => {
     let data = await RallyClient.nfts(token);
     res.json(data);
   } catch (err) {
-    console.log(err);
+    if (err == ErrRally.NoToken) {
+      let data = await RallyClient.register();
+      if (data) res.redirect(`/nfts/${token}`);
+      else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
   }
 });
 
@@ -48,12 +89,23 @@ router.get('/balance/:networkID/:asset/:identifier', async (req, res) => {
   let user = req.params.networkID;
   let asset = req.params.asset;
   let identifier = req.params.identifier;
-  if (asset === 'token') {
-    let bal = await RallyClient.balance(user, identifier);
-    res.json({ qty: bal });
-  } else {
-    let owned = await RallyClient.isOwned(user, identifier);
-    res.json({ owned: owned });
+  try {
+    if (asset === 'token') {
+      let bal = await RallyClient.balance(user, identifier);
+      res.json({ qty: bal });
+    } else {
+      let owned = await RallyClient.isOwned(user, identifier);
+      res.json({ owned: owned });
+    }
+  } catch (err) {
+    if (err == ErrRally.NoToken) {
+      let data = await RallyClient.register();
+      if (data) res.redirect(`/balance/${user}/${asset}/${identifier}`);
+      else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
   }
 });
 

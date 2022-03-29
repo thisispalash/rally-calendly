@@ -5,60 +5,84 @@ import { GatedEventModel, AttendeeModel } from './events.js';
 import { ErrDB } from '../utils/errors.js';
 
 export const addToDB = async (model, data) => {
-  let res = undefined;
+  let query = undefined;
   switch (model) {
     case 'CalendlyAccess':
-      res = await CalendlyAccessModel.find({ owner: data.owner });
-      if (res[0]) throw ErrDB.Exists;
-      await CalendlyAccessModel.create(data);
+      model = CalendlyAccessModel;
+      query = { owner: data.owner };
       break;
     case 'RallyUser':
-      res = await RallyUserModel.find({ userID: data.userID });
-      if (res[0]) throw ErrDB.Exists;
-      await RallyUserModel.create(data);
+      model = RallyUserModel;
+      query = { userID: data.userID };
       break;
     case 'GatedEvent':
-      res = await GatedEventModel.find({ calendly: data.calendly });
-      if (res[0]) throw ErrDB.Exists;
-      await GatedEventModel.create(data);
+      model = GatedEventModel;
+      query = { calendly: data.calendly };
       break;
     case 'EventAttendee':
-      res = await AttendeeModel.find({ schedule: data.schedule });
-      if (res[0]) throw ErrDB.Exists;
-      await AttendeeModel.create(data);
+      model = AttendeeModel;
+      query = { schedule: data.schedule };
       break;
   }
+  let doc = await model.findOne(query);
+  if (doc) throw ErrDB.Exists;
+  doc = await model.create(data);
+  return doc;
 }
 
 export const updateDB = async (model, filter, data) => {
   switch (model) {
     case 'CalendlyAccess':
-      await CalendlyAccessModel.updateOne(filter, data);
+      model = CalendlyAccessModel;
+      break;
+    case 'RallyUser':
+      model = RallyUserModel;
       break;
     case 'GatedEvent':
-      await GatedEventModel.updateOne(filter, data);
+      model = GatedEventModel;
+      break;
+    case 'EventAttendee':
+      model = AttendeeModel;
       break;
   }
+  const res = model.updateOne(filter, data);
+  return res;
 }
 
 export const findInDB = async (model, query) => {
-  let data = undefined;
   switch (model) {
     case 'CalendlyAccess':
-      data = await CalendlyAccessModel.findOne(query);
-      if (!data.length) throw ErrDB.NotFound;
-      return data;
+      model = CalendlyAccessModel;
+      break;
+    case 'RallyUser':
+      model = RallyUserModel;
+      break;
     case 'GatedEvent':
-      data = await GatedEventModel.findOne(query);
-      if (!data.length) throw ErrDB.NotFound;
-      return data;
-    case 'GatedEventAll':
-      data = await GatedEventModel.find(query);
-      if (!data.length) throw ErrDB.NotFound;
-      return data;
+      model = GatedEventModel;
+      break;
     case 'EventAttendee':
-      data = await AttendeeModel.findOne(query);
-      if (!data.length) throw ErrDB.NotFound;
-      return data;
+      model = AttendeeModel;
+      break;
   }
+  const data = await model.findOne(query);
+  if (!data.length) throw ErrDB.NotFound;
+  return data;
+}
+
+export const getFromDB = async (model) => {
+  switch (model) {
+    case 'CalendlyAccess':
+      model = CalendlyAccessModel;
+      break;
+    case 'RallyUser':
+      model = RallyUserModel;
+      break;
+    case 'GatedEvent':
+      model = GatedEventModel;
+      break;
+    case 'EventAttendee':
+      model = AttendeeModel;
+      break;
+  }
+  return await model.find();
 }

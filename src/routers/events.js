@@ -1,5 +1,5 @@
 import express from "express";
-import { addToDB, findInDB, updateDB } from "../db/index.js";
+import { addToDB, findInDB, getFromDB, updateDB } from "../db/index.js";
 
 const router = express.Router();
 
@@ -46,7 +46,7 @@ router.get('/get/:token', async (req, res) => {
 router.get('/all/:token', async (req, res) => {
   let token = req.params.token;
   try {
-    let data = await findInDB('GatedEventAll', {});
+    let data = await getFromDB('GatedEvent');
     if (token == 'false') {
       res.json(data);
       return;

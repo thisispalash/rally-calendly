@@ -122,4 +122,13 @@ router.get('/single/:slug/:id', async (req, res) => {
   }
 });
 
+router.get('/event-details/:event', async (req, res) => {
+  let uuid = req.params.event;
+});
+
+router.get('/invitee/:event/:invitee', async (req, res) => {
+  let event = req.params.event;
+  let invitee = req.params.invitee;
+})
+
 export default router;

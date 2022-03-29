@@ -15,7 +15,7 @@ async function get_request(url, headers, params) {
   }
 }
 
-async function post_request(url, body, headers) {
+async function post_request(url, headers, body) {
   try {
     return await axios.post(url, body, toConfig(headers));
   } catch (err) {

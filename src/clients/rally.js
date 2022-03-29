@@ -1,5 +1,3 @@
-import e from "express";
-import { reset } from "nodemon";
 import { get_request, post_request } from "../utils/axios.js";
 import { ErrRally } from "../utils/errors.js";
 
@@ -37,10 +35,9 @@ class RallyClient {
 
   async register() {
     console.log('/register');
-    const res = await post_request( `${this.v1_url}/oauth/register`, {
-      username: this.username,
-      password: this.password
-    });
+    const res = await post_request( `${this.v1_url}/oauth/register`, {},
+      { username: this.username, password: this.password }
+    );
     if (res.status == 200) {
       this.setAuth(res.data);
       console.log('successfully registered');
@@ -63,8 +60,8 @@ class RallyClient {
     console.log('/authorize');
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     const res = await post_request(`${this.v1_url}/oauth/authorize`, 
-      { callback: this.callback_url }, 
-      { Authorization: `${this.token_type} ${this.access_token}` }
+      { Authorization: `${this.token_type} ${this.access_token}` },
+      { callback: this.callback_url }
     );
     if (res.status == 200) {
       console.log('Successfully authorized user');
@@ -80,8 +77,8 @@ class RallyClient {
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     if (code === 'cancelled') throw ErrRally.CancelAuth;
     const res = await post_request(`${this.v1_url}/oauth/userinfo`,
-      { code: code },
-      { Authorization: `${this.token_type} ${this.access_token}` }
+      { Authorization: `${this.token_type} ${this.access_token}` },
+      { code: code }
     )
     if (res.status == 200) {
       console.log('User authorized application');

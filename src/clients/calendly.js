@@ -1,4 +1,3 @@
-import e from "express";
 import { get_request, post_request } from "../utils/axios.js";
 import { ErrCalendly } from "../utils/errors.js";
 
@@ -20,8 +19,8 @@ class CalendlyClient {
   async tokenize(code) {
     console.log('requesting calendly access token..');
     const res = await post_request(`${this.auth_url}/oauth/token`,
-      `grant_type=authorization_code&client_id=${this.client_id}&client_secret=${this.secret}&code=${code}&redirect_uri=${this.callback}`,
-      { 'Content-Type': 'application/x-www-form-urlencoded' }
+      { 'Content-Type': 'application/x-www-form-urlencoded' },
+      `grant_type=authorization_code&client_id=${this.client_id}&client_secret=${this.secret}&code=${code}&redirect_uri=${this.callback}`
     );
     if (res.status == 200) {
       console.log('Calendly access token received..');
@@ -43,8 +42,8 @@ class CalendlyClient {
   async refresh(token) {
     console.log('refreshing calendly access token..');
     const res = await post_request(`${this.auth_url}/oauth/token`,
+      { 'Content-Type': 'application/x-www-form-urlencoded' },
       `grant_type=refresh_token&client_id=${this.client_id}&client_secret=${this.secret}&refresh_token=${token}`,
-      { 'Content-Type': 'application/x-www-form-urlencoded' }
     );
     if (res.status == 200) {
       console.log('Calendly access token refreshed..');
@@ -64,8 +63,8 @@ class CalendlyClient {
   async isValidToken(token) {
     console.log('Introspecting access token..');
     const res = await post_request(`${this.auth_url}/oauth/introspect`,
-      `client_id=${this.client_id}&client_secret=${this.secret}&token=${token}`,
-      { 'Content-Type': 'application/x-www-form-urlencoded' }
+      { 'Content-Type': 'application/x-www-form-urlencoded' },
+      `client_id=${this.client_id}&client_secret=${this.secret}&token=${token}`
     );
     return res.data.active;
   }
@@ -123,8 +122,8 @@ class CalendlyClient {
   async getSchedulingLink(token_type, token, event) {
     if (!this.isValidToken) throw ErrCalendly.ExpiredToken;
     let res = await post_request(`${this.base_url}/scheduling_links`, 
-      { max_event_count: 1, owner_type: 'EventType', owner: `${this.base_url}/event_types/${event}`},
-      { 'Authorization': `${token_type} ${token}`}
+      { 'Authorization': `${token_type} ${token}`},
+      { max_event_count: 1, owner_type: 'EventType', owner: `${this.base_url}/event_types/${event}`}
     );
     if (res.status == 201) {
       return res.data.resource.booking_url;

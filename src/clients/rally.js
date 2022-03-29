@@ -34,14 +34,11 @@ class RallyClient {
   }
 
   async register() {
-    console.log('/register');
     const res = await post_request( `${this.v1_url}/oauth/register`, {},
       { username: this.username, password: this.password }
     );
     if (res.status == 200) {
       this.setAuth(res.data);
-      console.log('successfully registered');
-      console.log(res.data)
       return true;
     } else {
       this.clearAuth();
@@ -57,7 +54,6 @@ class RallyClient {
   }
 
   async authorize() {
-    console.log('/authorize');
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     const res = await post_request(`${this.v1_url}/oauth/authorize`, 
       { Authorization: `${this.token_type} ${this.access_token}` },
@@ -73,7 +69,6 @@ class RallyClient {
   }
 
   async userID(code) {
-    console.log('/userID');
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     if (code === 'cancelled') throw ErrRally.CancelAuth;
     const res = await post_request(`${this.v1_url}/oauth/userinfo`,
@@ -93,7 +88,6 @@ class RallyClient {
   }
 
   async checkCreator(user) {
-    console.log(`checking if ${user} is a creator`);
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
     let res = await get_request(`${this.api_url}/creator-coins`,
       { Authorization: `${this.token_type} ${this.access_token}` },

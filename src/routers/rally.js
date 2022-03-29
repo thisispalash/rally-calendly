@@ -46,7 +46,7 @@ router.get('/callback', async (req, res) => {
   try {
     let data = await RallyClient.userID(code);
     data.isCreator = await RallyClient.checkCreator(data.userID);
-    res.render('auth', data);
+    res.render('authR', data);
     await addToDB('RallyUser', data);
   } catch (err) {
     if (err == ErrRally.NoToken) {

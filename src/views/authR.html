@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <p>
+      Successfully Authorized. Redirecting to Home..
+    </p>
+  </body>
+  <script>
+    let data = {
+      userID: '<%= userID %>',
+      networkID: '<%= networkID %>',
+      isCreator: '<%= isCreator %>'
+    }
+    opener.authenticateRally(data);
+    window.close();
+  </script>
+</html>

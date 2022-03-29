@@ -46,19 +46,19 @@ export const findInDB = async (model, query) => {
   switch (model) {
     case 'CalendlyAccess':
       data = await CalendlyAccessModel.findOne(query);
-      if (!data) throw ErrDB.NotFound;
+      if (!data.length) throw ErrDB.NotFound;
       return data;
     case 'GatedEvent':
       data = await GatedEventModel.findOne(query);
-      if (!data) throw ErrDB.NotFound;
+      if (!data.length) throw ErrDB.NotFound;
       return data;
     case 'GatedEventAll':
       data = await GatedEventModel.find(query);
-      if (!data) throw ErrDB.NotFound;
+      if (!data.length) throw ErrDB.NotFound;
       return data;
     case 'EventAttendee':
-      data = await GatedEventModel.findOne(query);
-      if (!data) throw ErrDB.NotFound;
+      data = await AttendeeModel.findOne(query);
+      if (!data.length) throw ErrDB.NotFound;
       return data;
   }
 }

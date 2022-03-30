@@ -5,7 +5,22 @@ function loginRally() {
     url: '/rally/register'
   }).done( (res) => {
     if (res) console.log('successfully registered application');
+    localStorage.setItem('rallyUserID', undefined);
+    localStorage.setItem('rallyNetworkID', undefined);
+    localStorage.setItem('isCreator', undefined);
+    localStorage.setItem('completed', false);
     window.open('/rally/auth', '_blank', 'popup, height=750px, width=1250px');
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'completed') {
+        let data = {
+          userID: localStorage.rallyUserID,
+          networkID: localStorage.rallyNetworkID,
+          isCreator: localStorage.isCreator
+        }
+        localStorage.clear();
+        authenticateRally(data);
+      }
+    });
   });
 }
 
@@ -21,7 +36,15 @@ function authenticateRally(data) {
 
 function loginCalendly() {
   console.log('logging into Calendly..');
+  localStorage.setItem('calendlySlug', undefined);
   window.open('/calendly/auth', '_blank', 'popup, height=750px, width=1250px');
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'calendlySlug') {
+      let slug = e.newValue;
+      localStorage.clear();
+      authenticateCalendly(slug);
+    }
+  });
 }
 
 function authenticateCalendly(slug) {

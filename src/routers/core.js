@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.post('/home', (req, res) => {
+router.post('/home', async (req, res) => {
   let form = req.body;
   if (form.formName === 'rallyLoginForm') {
     // User has just logged into application with RallyIO
@@ -23,7 +23,7 @@ router.post('/home', (req, res) => {
       console.log(err);
     } finally {
       data.calendlySlug = undefined;
-      res.render('home', data);
+      res.render('home-new', data);
     }
   } else if (form.formName === 'calendlyLoginForm') {
     // User has just logged into Calendly
@@ -34,7 +34,7 @@ router.post('/home', (req, res) => {
       calendlySlug: form.calendlySlug
     }
     await updateDB('GatrUser', { rallyUserID: data.rallyUserID }, data);
-    res.render('home', data);
+    res.render('home-new', data);
   } else {
     res.status(403).json({
       message: 'Unsupported form sent to this path',

@@ -7,12 +7,10 @@
     </p>
   </body>
   <script>
-    let data = {
-      userID: '<%= userID %>',
-      networkID: '<%= networkID %>',
-      isCreator: '<%= isCreator %>'
-    }
-    opener.authenticateRally(data);
+    localStorage.setItem('rallyUserID', '<%= userID %>');
+    localStorage.setItem('rallyNetworkID', '<%= networkID %>');
+    localStorage.setItem('isCreator', '<%= isCreator %>');
+    localStorage.setItem('completed', true);
     window.close();
   </script>
 </html>

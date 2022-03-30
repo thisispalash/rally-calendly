@@ -7,7 +7,7 @@
     </p>
   </body>
   <script>
-    opener.authenticateCalendly('<%= slug %>');
+    localStorage.setItem('calendlySlug', '<%= slug %>');
     window.close();
   </script>
 </html>

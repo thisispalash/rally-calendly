@@ -110,12 +110,21 @@ class RallyClient {
 
   async balance(user, token) {
     if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
-    const res = await get_request(`${this.api_url}/rally-network-wallets/${user}`,
+    const res = await get_request(`${this.api_url}/rally-network-wallets/${user}/balance`,
       { Authorization: `${this.token_type} ${this.access_token}` },
       { symbolSearch: token }
     );
     if (res.status == 200) {
-      return res.data[0].amount / 10 ** res.data[0].scale;
+      if (res.data.length) {
+        res.data.forEach( (obj) => {
+          if (obj.currencyType === 'CREATOR_COIN') {
+            if (obj.currency === token) {
+              return obj.amount / 10 ** obj.scale;
+            }
+          }
+        });
+      } 
+      return 0;
     } else {
       console.log(res.data);
       return -1;

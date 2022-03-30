@@ -85,22 +85,38 @@ router.get('/nfts/:token', async (req, res) => {
   }
 });
 
-router.get('/balance/:networkID/:asset/:identifier', async (req, res) => {
+router.get('/balance/:networkID/:token', async (req, res) => {
   let user = req.params.networkID;
-  let asset = req.params.asset;
-  let identifier = req.params.identifier;
+  let token = req.params.token;
   try {
-    if (asset === 'token') {
-      let bal = await RallyClient.balance(user, identifier);
-      res.json({ qty: bal });
+    let balance = await RallyClient.balance(user, token);
+    if (balance < 0) {
+      res.status(500).send('some error occured.')
     } else {
-      let owned = await RallyClient.isOwned(user, identifier);
-      res.json({ owned: owned });
+      res.status(200).json({ bal: balance });
     }
   } catch (err) {
     if (err == ErrRally.NoToken) {
       let data = await RallyClient.register();
-      if (data) res.redirect(`/balance/${user}/${asset}/${identifier}`);
+      if (data) res.redirect(req.originalUrl);
+      else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
+  }
+});
+
+router.get('/owned/:networkID/:nftID', async (req, res) => {
+  let user = req.params.networkID;
+  let nft = req.params.nftID;
+  try {
+    let owned = await RallyClient.isOwned(user, nft);
+    res.json({ owned: owned });
+  } catch (err) {
+    if (err == ErrRally.NoToken) {
+      let data = await RallyClient.register();
+      if (data) res.redirect(req.originalUrl);
       else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
     } else {
       console.log(err);

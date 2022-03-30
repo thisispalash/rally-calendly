@@ -1,0 +1,137 @@
+<div class="modal fade" tabindex="-1" id="scheduleEventModal" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content bg-dark text-white">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Book A Gated Event</h4>
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-header">
+        <label for="tokenName" class="col-sm-3 lead">Search by Creator:</label>
+        <div class="col-sm-8">
+          <input type="text" name="tokenName" id="tokenName" class="form-control">
+        </div>
+      </div>
+
+      <div class="modal-body lead" id="scheduleEventModalBody">
+
+        <form method="post" id="scheduleEventForm">
+          <input type="hidden" name="formName" value="scheduleEvent">
+          <input type="hidden" name="rallyUserID" id="rallyUserID">
+          <input type="hidden" name="calendlyScheduledEvent" id="calendlyScheduledEvent">
+          <input type="hidden" name="calendlyScheduledInvitee" id="calendlyScheduledInvitee">
+        </form>
+
+        <div class="container aligns-items-center justify-content-center" id="gatedEventList"></div>
+
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+
+<script> /* Clear form on modal open */
+
+  $('#scheduleEventModal').on('show.bs.modal', (e) => {
+    $('#scheduleEventModal input#tokenName').val('');
+    $('#scheduleEventForm').trigger('reset');
+    $('#scheduleEventForm').prop('action', '');
+    showGatedEvents(sessionStorage.isCreator);
+  });
+
+</script>
+
+<script> /* Named functions */
+
+  function promptUser(msg) {
+    $('#userMessageModal').modal('show');
+    $('#userMessageModal p#serverMessage').html(msg);
+  }
+
+  function showCalendly(id) {
+    $('#scheduleEventForm').prop('action', `/events/book/${id}`);
+    $('#scheduleEventForm input#rallyUserID').val(sessionStorage.rallyUserID);
+    $.ajax({
+      method: 'GET',
+      url: `/calendly/single/${sessionStorage.calendlySlug}/${id}`
+    }).then( (url) => {
+      Calendly.showPopupWidget(url)
+    });
+  }
+
+  function scheduleEvent(btn) {
+    btn = $(btn);
+    let data = {
+      id: btn.data('eventid'),
+      gate: btn.data('gate'),
+      token: btn.data('token'),
+      qty: btn.data('qty'),
+      nft: btn.data('nft')
+    }
+
+    console.log(data)
+
+    if (data.gate === 'token') {
+      $.ajax({
+        method: 'GET',
+        url: `/rally/balance/${sessionStorage.rallyNetworkID}/${data.token}`
+      }).then( (res) => {
+        if (res.bal < data.qty) {
+          promptUser(`Insufficient $${data.token} held. Please purchase more to book.`);
+        } else {
+          showCalendly(data.id);
+        }
+      });
+    } else {
+      $.ajax({
+        method: 'GET',
+        url: `/rally/owned/${sessionStorage.rallyNetworkID}/${data.nft}`
+      }).then( (val) => {
+        if (val) {
+          showCalendly(data.id);
+        } else {
+          promptUser(`NFT ID ${data.nft} not owned. Please purchase to book.`);
+        }
+      });
+    }
+  }
+
+</script>
+
+<script> /* Return from Calendly Popup */
+
+  $(window).on('message', (e) => {
+    e = e.originalEvent;
+
+    function isCalendlyEvent(e) {
+      return e.origin === 'https://calendly.com' && e.data.event && e.data.event.indexOf('calendly.') === 0;
+    }
+
+    if (isCalendlyEvent(e) && event.data.event == 'calendly.event_scheduled') {
+      let event_uuid = event.data.payload.event.uri.split('/').slice(-1)[0];
+      let invitee_uuid = event.data.payload.invitee.uri.split('/').slice(-1)[0];
+      $('#scheduleEventForm input#calendlyScheduledEvent').val(event_uuid);
+      $('#scheduleEventForm input#calendlyScheduledInvitee').val(invitee_uuid);
+      let form = $('#scheduleEventForm');
+      $.ajax({
+        method: 'POST',
+        url: form.prop('action'),
+        data: form.serialize()
+      }).then( (msg) => {
+        $('#scheduleEventForm').trigger('reset');
+        $('#scheduleEventForm').prop('action', '');
+        showScheduledEvents(sessionStorage.rallyUserID);
+      });
+    }
+  })
+</script>

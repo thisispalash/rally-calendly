@@ -79,6 +79,27 @@ export const findInDB = async (model, query) => {
   return data;
 }
 
+export const findAllInDB = async (model, query) => {
+  switch (model) {
+    case 'CalendlyAccess':
+      model = CalendlyAccessModel;
+      break;
+    case 'RallyUser':
+      model = RallyUserModel;
+      break;
+    case 'GatedEvent':
+      model = GatedEventModel;
+      break;
+    case 'EventAttendee':
+      model = AttendeeModel;
+      break;
+    case 'GatrUser':
+      model = GatrUserModel;
+      break;
+  }
+  return await model.find(query);
+}
+
 export const getFromDB = async (model) => {
   switch (model) {
     case 'CalendlyAccess':

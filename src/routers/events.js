@@ -1,10 +1,11 @@
 import express from "express";
-import { addToDB, findInDB, getFromDB, updateDB } from "../db/index.js";
+import { addToDB, findInDB, findAllInDB, getFromDB, updateDB } from "../db/index.js";
 
 const router = express.Router();
 
 router.post('/new', async (req, res) => {
   let data = req.body;
+  console.log(data);
   // let rallyDoc = await findInDB('RallyUser', { networkID: data.rallyNetworkID });
   // if (rallyDoc.tokenSymbol === 'false' || data.tokenSymbol != rallyDoc.isCreator) {
   //   res.send(`Unauthorized to schedule an event for ${data.tokenSymbol}`);
@@ -32,32 +33,19 @@ router.get('/get/:token', async (req, res) => {
   let token = req.params.token;
   if (token === 'false') {
     res.json([]);
-    return;
-  }
-  try {
-    let data = await getFromDB('GatedEvent', { token: token });
+  } else {
+    let data = await findAllInDB('GatedEvent', { token: token });
     res.json(data);
-  } catch (err) {
-    console.log(err);
   }
 });
 
 router.get('/all/:token', async (req, res) => {
   let token = req.params.token;
-  try {
-    let data = await getFromDB('GatedEvent');
-    if (token == 'false') {
-      res.json(data);
-      return;
-    }
-    let ret = [];
-    data.forEach( doc => {
-      if (doc.token == token) return;
-      ret.push(doc);
-    })
-    res.json(ret);
-  } catch (err) {
-    console.log(err);
+  let data = await getFromDB('GatedEvent');
+  if (token === 'false') {
+    res.json(data);
+  } else {
+    res.json(data.filter(obj => obj.token !== token));
   }
 });
 
@@ -77,7 +65,7 @@ router.post('/update/:id', async (req,res) => {
   res.send(`updated event ${doc.name}`);
 });
 
-router.post('/schedule/:id', async (req, res) => {
+router.post('/book/:id', async (req, res) => {
   let id = req.params.id;
   let data = req.body;
   let doc = {
@@ -93,6 +81,12 @@ router.post('/schedule/:id', async (req, res) => {
     console.log(err);
     res.send('Error occurred in adding to DB');
   }
+});
+
+router.get('/scheduled/:rallyUserID', async (req, res) => {
+  let user = req.params.rallyUserID;
+  let data = await findAllInDB('EventAttendee', { rallyUserID: user });
+  res.json(data);
 });
 
 export default router;

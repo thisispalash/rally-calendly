@@ -3,7 +3,7 @@
 <div class="container-fluid d-flex flex-column">
 
 
-  <header class="mb-auto">
+  <header class="mb-3">
 
     <div class="container" id="rallyInfo">
       
@@ -41,14 +41,14 @@
 
   </header>
 
-  <main class="px-3">
+  <main class="px-3 my-3">
     <div class="container">
 
-      <div class="row" id="promptUserRow">
+      <div class="row my-5" id="promptUserRow">
         <p>Please connect your Calendly account by clicking the button above.</p>
       </div>
 
-      <div class="row" id="mainButtonRow">
+      <div class="row my-5" id="mainButtonRow">
         <div class="col" id="createButtonCol">
           <button class="btn btn-large btn-outline-light" data-bs-toggle="modal" data-bs-target="#createEventModal">
             Create New Gated Event
@@ -62,20 +62,20 @@
         </div>
       </div>
 
-      <div class="row" id="createdEventsRow">
-        <div class="col-2">
+      <div class="row my-5" id="createdEventsRow">
+        <div class="col-3 d-flex aligns-items-center justify-content-center">
           <p class="lead">Created Events:</p>
         </div>
-        <div class="col" id="createdEventsList">
+        <div class="col-9 d-flex overflow-auto" id="createdEventsList">
           <p class="lead">No events created.</p>
         </div>
       </div>
 
-      <div class="row" id="scheduledEventsRow">
-        <div class="col-2">
+      <div class="row my-5" id="scheduledEventsRow">
+        <div class="col-3 d-flex aligns-items-center justify-content-center">
           <p class="lead">Scheduled Events:</p>
         </div>
-        <div class="col" id="scheduledEventsList">
+        <div class="col-9 d-flex overflow-auto" id="scheduledEventsList">
           <p class="lead">No events scheduled.</p>
         </div>
       </div>
@@ -90,6 +90,8 @@
 <%- include('modals/editEventModal.html') -%>
 <%- include('modals/scheduleEventModal.html') -%>
 <%- include('modals/viewEventModal.html') -%>
+
+<script src="/static/js/events.js"></script>
 
 <script>
   if (sessionStorage.calendlySlug) {
@@ -115,7 +117,10 @@
   if (sessionStorage.isCreator === 'false') {
     $('main #createButtonCol').hide();
     $('main #createdEventsRow').hide();
+  } else {
+    showCreatedEvents(sessionStorage.isCreator);
   }
+  showScheduledEvents(sessionStorage.rallyUserID);
 </script>
 
 <%- include('components/tail.html') -%>

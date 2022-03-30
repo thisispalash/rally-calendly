@@ -36,7 +36,7 @@ router.get('/get/:token', async (req, res) => {
     return;
   }
   try {
-    let data = await findInDB('GatedEventAll', { token: token });
+    let data = await getFromDB('GatedEvent', { token: token });
     res.json(data);
   } catch (err) {
     console.log(err);

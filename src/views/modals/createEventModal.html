@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" id="createEventModal">
+<div class="modal fade" tabindex="-1" id="createEventModal" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content bg-dark text-white">
 
@@ -77,8 +77,6 @@
   </div>
 </div>
 
-<%- include('userMessageModal.html') -%>
-
 <script> /* Form Behaviour */
 
   $('#createEventForm input[name="gateType"]').on('click', () => {
@@ -87,6 +85,7 @@
       $('#createEventForm #nftOptionsDiv').show();
       $('#createEventForm input#nftOptions').prop('required', true);
       $('#createEventForm #qtyInputDiv').hide();
+      $('#editEventForm input#minHeldQty').val('');
       $('#createEventForm input#minHeldQty').prop('required', false);
     }
     else {
@@ -114,6 +113,16 @@
 
 </script>
 
+<script> /* Reset form on modal close */
+
+  $('#createEventModal').on('hide.bs.modal', (e) => {
+    $('#createEventForm').trigger('reset');
+    $('#createEventForm #nftOptionsDiv').hide();
+    $('#createEventForm #qtyInputDiv').hide();
+  });
+
+</script>
+
 <script> /* Submit Form */
 
   $('#createEventForm').on('submit', (e) => {
@@ -129,6 +138,7 @@
       $('#userMessageModal p#serverMessage').html(msg);
       form.trigger('reset');
       showCreatedEvents(sessionStorage.isCreator);
+      $('#createEventModal').modal('hide');
     });
   });
 

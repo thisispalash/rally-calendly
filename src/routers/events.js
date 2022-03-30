@@ -30,7 +30,6 @@ router.post('/new', async (req, res) => {
 
 router.get('/get/:token', async (req, res) => {
   let token = req.params.token;
-  console.log(`fetching events for ${token}`)
   if (token === 'false') {
     res.json([]);
     return;
@@ -75,7 +74,7 @@ router.post('/update/:id', async (req,res) => {
     calendly: data.eventOptions
   }
   await updateDB('GatedEvent', { _id: id }, doc);
-  res.send(`updated event ${data.name}`);
+  res.send(`updated event ${doc.name}`);
 });
 
 router.post('/schedule/:id', async (req, res) => {

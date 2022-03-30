@@ -22,9 +22,8 @@
 - [x] Pull and store events
 - [x] Show events from db
 - [x] Book a available timeslot
+- [x] Clean up code
 - [ ] Show scheduled events and invitees
-- [ ] Redirect to purchase in case of insufficient funds
-- [ ] Clean up code
 - [ ] Submit!
 - [ ] UI/UX improvements
 - [ ] Write out tests and perform [preliminary] debugging as required

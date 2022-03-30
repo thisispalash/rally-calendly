@@ -75,7 +75,7 @@ export const findInDB = async (model, query) => {
       break;
   }
   const data = await model.findOne(query);
-  if (!data.length) throw ErrDB.NotFound;
+  if (!data) throw ErrDB.NotFound;
   return data;
 }
 

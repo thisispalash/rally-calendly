@@ -23,7 +23,7 @@ router.post('/home', async (req, res) => {
       console.log(err);
     } finally {
       data.calendlySlug = undefined;
-      res.render('home-new', data);
+      res.render('home', data);
     }
   } else if (form.formName === 'calendlyLoginForm') {
     // User has just logged into Calendly
@@ -34,7 +34,7 @@ router.post('/home', async (req, res) => {
       calendlySlug: form.calendlySlug
     }
     await updateDB('GatrUser', { rallyUserID: data.rallyUserID }, data);
-    res.render('home-new', data);
+    res.render('home', data);
   } else {
     res.status(403).json({
       message: 'Unsupported form sent to this path',

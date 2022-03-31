@@ -96,7 +96,7 @@ function showGatedEvents(token) {
     url: `/events/all/${token}`
   }).then( (data) => {
     let html = '';
-    if (data === []) {
+    if (!data.length) {
       $('#scheduleEventModal #gatedEventList').html('No events available to book.');
     } else {
       $('#scheduleEventModal #gatedEventList').html(''); // clear previous entries

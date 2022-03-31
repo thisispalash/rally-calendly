@@ -78,14 +78,17 @@ The repository also contains screen recordings for common user flows.
 ![](screens/gif/book_blocked.gif)
 
 **Successful Attempt**
-![](screens/gif/book_blocked.gif)
+
+![](screens/gif/book_event.gif)
 
 ### View Events
 
 **Creator**
+
 ![](screens/img/creator_view_event.png)
 
 **Users**
+
 ![](screens/img/user_view_event.png)
 
 ## Known Issues

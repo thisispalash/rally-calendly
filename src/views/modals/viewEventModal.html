@@ -97,7 +97,7 @@
                       html += `<span>Email: ${guestData.email}<span>`;
                       html += '<br>'
                       html += `<span>Rally Username: ${rallyData.username}</span>`;
-                    html += '</p>'
+                    html += '</p>';
                     html += '<p class="lead">';
                       html += `<span>Start Time: ${start.toString()}</span>`;
                       html += '<br/>';
@@ -116,11 +116,50 @@
         }
       });
 
-    } else {
-      // Scheduled event being viewed
-      // Display Calendly data
-    }
+    } else { // Scheduled event being viewed
+      
+      let gateAjax = $.ajax({
+        method: 'GET',
+        url: `/events/get/id/${data.id}`
+      });
+      let eventAjax = $.ajax({
+        method: 'GET',
+        url: `/calendly/event/${sessionStorage.calendlySlug}/${data.schedule}`
+      });
+      let guestAjax = $.ajax({
+        method: 'GET',
+        url: `/calendly/invitee/${sessionStorage.calendlySlug}/${data.schedule}/${data.invitee}`
+      });
 
+      $.when(gateAjax, eventAjax, guestAjax)
+      .then( (gateData, eventData, guestData) => {
+        gateData = gateData[0];
+        eventData = eventData[0];
+        guestData = guestData[0];
+        let start = eventData.start;
+        let end = eventData.end;
+
+        let html = '';
+        html += '<p class="lead">';
+          html += `<span>${gateData.name}</span>`;
+          html += '<br>';
+          html += `<span class="text-muted">${eventData.name}</span>`;
+        html += '</p>';
+        if (gateData.gate == 'token') {
+          html += `<p class="lead">Gated by ${gateData.qty} $${gateData.token}</p>`;
+        } else {
+          html += `<p class="lead">Gated by NFT ID ${gateData.nft}</p>`;
+        }
+        html += '<p class="lead">';
+          html += `<span>Start Time: ${start.toString()}</span>`;
+          html += '<br/>';
+          html += `<span>End Time: ${end.toString()}</span>`;
+          html += '<br/>';
+          html += `<span class="text-muted">Status: ${eventData.status}</span>`;
+        html += '</p>';
+        $('#viewEventModalBody').html(html);
+      });
+    }
   });
 
 </script>

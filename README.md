@@ -15,10 +15,13 @@ The repository also contains screen recordings for common user flows.
 
 | User Flow | Screen Link |
 | :---: | :---: |
-| Login and OAuth | |
-| Create a new gated event | |
-| Schedule a gated event | |
-| View your events | |
+| Login and OAuth | [video](screens/vid/login.mov) |
+| Home Screen (w/o Events) | [creator](screens/img/creator_home.png), [user](screens/img/user_home.png) |
+| Home Screen (w/ Events) | [creator](screens/img/creator_home_events.png), [user](screens/img/user_home_events.png) |
+| Create a new gated event | [video](screens/vid/create_event.mov) |
+| Edit a gated event | [video](screens/vid/edit_event.mov) |
+| Schedule a gated event | [succes](screens/vid/book_event.mov), [fail](screens/vid/book_blocked) |
+| View your events | [creator](screens/img/creator_view_event.png), [user](screens/img/user_view_event.png) |
 
 ## Running Locally
 

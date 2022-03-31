@@ -78,7 +78,7 @@ function showScheduledEvents(rallyUserID) {
         html += `<h5 class="card-title">${event.eventID}</h5>`;
         html += `<p class="lead">Event UUID: ${event.schedule}</p>`;
         html += `<p class="lead">Attendee UUID: ${event.invitee}</p>`;
-        html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventid=${event._id} data-schedule=${event.schedule} data-invitee=${event.invitee}>View</button>`
+        html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventid=${event.eventID} data-schedule=${event.schedule} data-invitee=${event.invitee}>View</button>`
         html += '</div>';
         html += '</div>';
         html += '</div>';

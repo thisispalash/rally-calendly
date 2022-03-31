@@ -70,20 +70,40 @@ function showScheduledEvents(rallyUserID) {
     } else {
       $('#scheduledEventsList').html(''); // clear previous entries
       data.forEach( (event) => {
-        html = '';
+        let gateAjax = $.ajax({
+          method: 'GET',
+          url: `/events/get/id/${event.eventID}`
+        });
+        let eventAjax = $.ajax({
+          method: 'GET',
+          url: `/calendly/event/${sessionStorage.calendlySlug}/${event.schedule}`
+        });
+        $.when(gateAjax, eventAjax)
+        .then( (gateData, eventData) => {
+          html = '';
+          gateData = gateData[0];
+          eventData = eventData[0];
 
-        html += '<div class="col-4 my-3 mx-3">'
-        html += '<div class="card border-light bg-dark text-white">';
-        html += '<div class="card-body">';
-        html += `<h5 class="card-title">${event.eventID}</h5>`;
-        html += `<p class="lead">Event UUID: ${event.schedule}</p>`;
-        html += `<p class="lead">Attendee UUID: ${event.invitee}</p>`;
-        html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventid=${event.eventID} data-schedule=${event.schedule} data-invitee=${event.invitee}>View</button>`
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
+          html += '<div class="col-4 my-3 mx-3">'
+            html += '<div class="card border-light bg-dark text-white">';
+              html += '<div class="card-body">';
+                html += '<h5 class="card-title">';
+                  html += `<span>${gateData.name}</span>`;
+                  html += '<br>';
+                  html += `<span class="text-muted"'>${eventData.name}</span>`;
+                html += '</h5>';
+                if (gateData.gate == 'token') {
+                  html += `<p class="lead">Gated by ${gateData.qty} $${gateData.token}</p>`;
+                } else {
+                  html += `<p class="lead">Gated by NFT ID ${gateData.nft}</p>`;
+                }
+                html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventid=${event.eventID} data-schedule=${event.schedule} data-invitee=${event.invitee}>View</button>`
+              html += '</div>';
+            html += '</div>';
+          html += '</div>';
 
-        $('#scheduledEventsList').append(html);
+          $('#scheduledEventsList').append(html);
+        });
       });
     }
   })

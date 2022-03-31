@@ -1,5 +1,5 @@
 {
-  "name": "rally-calendy-gate",
+  "name": "rally-gatr",
   "version": "1.0.0",
   "description": "Gated Calendly access to schedule time with your favourite creators",
   "main": "index.js",

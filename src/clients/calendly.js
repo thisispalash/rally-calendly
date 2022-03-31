@@ -134,6 +134,48 @@ class CalendlyClient {
     }
   }
 
+  async getEventType(token_type, token, uuid) {
+
+  }
+
+  async getEventDetails(token_type, token, event) {
+    if (!this.isValidToken) throw ErrCalendly.ExpiredToken;
+    let res = await get_request(`${this.base_url}/scheduled_events/${event}`,
+      { 'Authorization': `${token_type} ${token}`}
+    );
+    if (res.status == 200) {
+      let data = {
+        name: res.data.resource.name,
+        status: res.data.resource.status,
+        start: new Date(res.data.resource.start_time),
+        end: new Date(res.data.resource.end_time)
+      }
+      return data;
+    } else {
+      console.log('Error in getting event details');
+      console.log(res.data);
+      return undefined;
+    }
+  }
+
+  async getInviteeDetails(token_type, token, event, invitee) {
+    if (!this.isValidToken) throw ErrCalendly.ExpiredToken;
+    let res = await get_request(`${this.base_url}/scheduled_events/${event}/invitees/${invitee}`,
+      { 'Authorization': `${token_type} ${token}`}
+    );
+    if (res.status == 200) {
+      let data = {
+        name: res.data.resource.name,
+        email: res.data.resource.email
+      }
+      return data;
+    } else {
+      console.log('Error in getting event details');
+      console.log(res.data);
+      return undefined;
+    }
+  }
+
 }
 
 export default CalendlyClient;

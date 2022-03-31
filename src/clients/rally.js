@@ -34,6 +34,7 @@ class RallyClient {
   }
 
   async register() {
+    console.log('register')
     const res = await post_request( `${this.v1_url}/oauth/register`, {},
       { username: this.username, password: this.password }
     );
@@ -106,6 +107,23 @@ class RallyClient {
       lastKey = res.headers['last-evaluated-key'];
     }
     return false;
+  }
+
+  async getUser(id) {
+    if (!this.isValidToken()) throw ErrRally.NoToken; // Caller handles by calling `register()`
+    const res = await get_request(`${this.api_url}/accounts/${id}`);
+    if (res.status == 200) {
+      let data = {
+        username: res.data.username,
+        userID: res.data.id,
+        networkID: res.data.rallyNetworkWalletIds[0]
+      }
+      return data;
+    } else {
+      console.log('error in fetching user');
+      console.log(res.data);
+      return undefined;
+    }
   }
 
   async balance(user, token) {

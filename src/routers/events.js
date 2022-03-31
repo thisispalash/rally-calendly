@@ -5,12 +5,13 @@ const router = express.Router();
 
 router.post('/new', async (req, res) => {
   let data = req.body;
-  console.log(data);
-  // let rallyDoc = await findInDB('RallyUser', { networkID: data.rallyNetworkID });
-  // if (rallyDoc.tokenSymbol === 'false' || data.tokenSymbol != rallyDoc.isCreator) {
-  //   res.send(`Unauthorized to schedule an event for ${data.tokenSymbol}`);
-  //   return;
-  // }
+  if (process.env.ENV !== 'dev') {
+    let rallyDoc = await findInDB('RallyUser', { networkID: data.rallyNetworkID });
+    if (rallyDoc.tokenSymbol === 'false' || data.tokenSymbol != rallyDoc.isCreator) {
+      res.send(`Unauthorized to schedule an event for ${data.tokenSymbol}`);
+      return;
+    }
+  }
   try {
     await findInDB('GatedEvent', { calendly: data.eventOptions }); // throws ErrDB.NotFound if doc not found
     res.send('Gated event for the selected event type already exists');
@@ -86,6 +87,23 @@ router.post('/book/:id', async (req, res) => {
 router.get('/scheduled/:rallyUserID', async (req, res) => {
   let user = req.params.rallyUserID;
   let data = await findAllInDB('EventAttendee', { rallyUserID: user });
+  res.json(data);
+});
+
+router.get('/get/id/:id', async (req, res) => {
+  let id = req.params.id;
+  try {
+    let data = await findInDB('GatedEvent', { _id: id });
+    res.json(data);
+  } catch (err) {
+    // this should never happen
+    console.log(err);
+  }
+});
+
+router.get('/get/attendees/:id', async (req, res) => {
+  let id = req.params.id;
+  let data = await findAllInDB('EventAttendee', { eventID: id });
   res.json(data);
 });
 

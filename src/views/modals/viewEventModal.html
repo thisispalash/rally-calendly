@@ -1,0 +1,126 @@
+<div class="modal fade" tabindex="-1" id="viewEventModal" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content bg-dark text-white">
+
+      <div class="modal-header">
+        <h4 class="modal-title">View Gated Event</h4>
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body lead" id="viewEventModalBody">
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+
+  $('#viewEventModal').on('show.bs.modal', (e) => {
+    let button = $(e.relatedTarget);
+    let data = {
+      id: button.data('eventid'),
+      schedule: button.data('schedule'),
+      invitee: button.data('invitee')
+    }
+
+    $('#viewEventModalBody').html('');
+
+    if (!data.schedule) { // Created event being viewed
+
+      let eventAjax = $.ajax({
+        method: 'GET',
+        url: `/events/get/id/${data.id}`
+      });
+
+      let attendeesAjax = $.ajax({
+        method: 'GET',
+        url: `/events/get/attendees/${data.id}`
+      });
+
+      $.when(eventAjax, attendeesAjax).then( (eventData, guestData) => {
+        eventData = eventData[0];
+        guestData = guestData[0];
+
+        let html = '';
+        html += `<div class="my-3 mx-3">`;
+        html += '<div class="card border-light bg-dark text-white">';
+        html += '<div class="card-body">';
+        html += `<h5 class="card-title">${eventData.name}</h5>`;
+        if (eventData.gate == 'token') {
+          html += `<p class="lead">Gated by ${eventData.qty} $${eventData.token}</p>`;
+        } else {
+          html += `<p class="lead">Gated by NFT ID ${eventData.nft}</p>`;
+        }
+        html += `<p class="text-muted">Total attendees: ${guestData.length}</p>`;
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        $('#viewEventModalBody').html(html);
+        $('#viewEventModalBody').append('<hr>');
+        $('#viewEventModalBody').append('<div class="m-3"><p class="display-6">Attendees</p></div>');
+        
+        if (guestData.length) {
+          guestData.forEach( (guest) => {
+            let guestAjax = $.ajax({
+              method: 'GET',
+              url: `/calendly/invitee/${sessionStorage.calendlySlug}/${guest.schedule}/${guest.invitee}`
+            });
+            let rallyAjax = $.ajax({
+              method: 'GET',
+              url: `/rally/user/${guest.rallyUserID}`
+            });
+            let eventAjax = $.ajax({
+              method: 'GET',
+              url: `/calendly/event/${sessionStorage.calendlySlug}/${guest.schedule}`
+            });
+            $.when(guestAjax, rallyAjax, eventAjax)
+            .then( (guestData, rallyData, eventData) => {
+              html = '';
+              guestData = guestData[0];
+              rallyData = rallyData[0];
+              eventData = eventData[0];
+              let start = new Date(eventData.start);
+              let end = new Date(eventData.end);
+              html += `<div class="my-3 mx-3">`;
+                html += '<div class="card border-light bg-dark text-white">';
+                  html += '<div class="card-body">';
+                    html += `<h5 class="card-title">${guestData.name}</h5>`;
+                    html += '<p class="text-muted">';
+                      html += `<span>Email: ${guestData.email}<span>`;
+                      html += '<br>'
+                      html += `<span>Rally Username: ${rallyData.username}</span>`;
+                    html += '</p>'
+                    html += '<p class="lead">';
+                      html += `<span>Start Time: ${start.toString()}</span>`;
+                      html += '<br/>';
+                      html += `<span>End Time: ${end.toString()}</span>`;
+                      html += '<br/>';
+                      html += `<span class="text-muted">Status: ${eventData.status}</span>`;
+                    html += '</p>';
+                  html += '</div>';
+                html += '</div>';
+              html += '</div>';
+              $('#viewEventModalBody').append(html);
+            });
+          });
+        } else {
+          $('#viewEventModalBody').append('<p class="lead mt-auto">No one has signed up for this event yet.</p>');
+        }
+      });
+
+    } else {
+      // Scheduled event being viewed
+      // Display Calendly data
+    }
+
+  });
+
+</script>

@@ -125,4 +125,22 @@ router.get('/owned/:networkID/:nftID', async (req, res) => {
   }
 });
 
+router.get('/user/:userID', async (req, res) => {
+  let user = req.params.userID;
+  try {
+    let data = await RallyClient.getUser(user);
+    if (data) res.status(200).json(data);
+    else res.status(500).json({ message: 'Some error occured.' });
+  } catch (err) {
+    if (err == ErrRally.NoToken) {
+      let data = await RallyClient.register();
+      if (data) res.redirect(req.originalUrl);
+      else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
+  }
+});
+
 export default router;

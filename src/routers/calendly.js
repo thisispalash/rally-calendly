@@ -117,18 +117,66 @@ router.get('/single/:slug/:id', async (req, res) => {
         message: 'Access token expired. Please call /calendly/refresh',
         expired: doc.expires_at
       });
+    } else {
+      console.log(err);
+      // TODO send error to client
     }
-    console.log(err);
   }
 });
 
-router.get('/event-details/:event', async (req, res) => {
+router.get('/event/:slug/:event', async (req, res) => {
+  let user = req.params.slug;
   let uuid = req.params.event;
+  try {
+    let access = await findInDB('CalendlyAccess', { slug: user });
+    let data = await CalendlyClient.getEventDetails(access.token_type, access.access_token, uuid);
+    if (data) res.status(200).json(data);
+    else res.status(500).json({ message: 'Some error occured.' });
+  } catch (err) {
+    if (err === ErrDB.NotFound) {
+      res.status(404).json({
+        slug: user,
+        message: 'No user found for provided slug.'
+      });
+    } else if (err === ErrCalendly.ExpiredToken) {
+      res.status(401).json({
+        slug: user,
+        message: 'Access token expired. Please call /calendly/refresh',
+        expired: doc.expires_at
+      });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
+  }
 });
 
-router.get('/invitee/:event/:invitee', async (req, res) => {
+router.get('/invitee/:slug/:event/:invitee', async (req, res) => {
+  let user = req.params.slug;
   let event = req.params.event;
   let invitee = req.params.invitee;
+  try {
+    let access = await findInDB('CalendlyAccess', { slug: user });
+    let data = await CalendlyClient.getInviteeDetails(access.token_type, access.access_token, event, invitee);
+    if (data) res.status(200).json(data);
+    else res.status(500).json({ message: 'Some error occured.' });
+  } catch (err) {
+    if (err === ErrDB.NotFound) {
+      res.status(404).json({
+        slug: user,
+        message: 'No user found for provided slug.'
+      });
+    } else if (err === ErrCalendly.ExpiredToken) {
+      res.status(401).json({
+        slug: user,
+        message: 'Access token expired. Please call /calendly/refresh',
+        expired: doc.expires_at
+      });
+    } else {
+      console.log(err);
+      // TODO send error to client
+    }
+  }
 })
 
 export default router;

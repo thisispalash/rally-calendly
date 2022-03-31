@@ -112,3 +112,4 @@ The following features can be added to the project in the future to provide a st
 
 - [ ] **Booking URLs** Event creators can share this link rather than their Calendly event links for their followers to schedule time with them.
 - [ ] **Payment gateway** Users who are gated out can pay for immediate access to the calendar.
+- [ ] **Meetings** Why leave our domain? Include meetings support, or at the least, create and provide links to meet.

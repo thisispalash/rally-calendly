@@ -76,7 +76,7 @@ router.get('/nfts/:token', async (req, res) => {
   } catch (err) {
     if (err == ErrRally.NoToken) {
       let data = await RallyClient.register();
-      if (data) res.redirect(`/nfts/${token}`);
+      if (data) res.redirect(req.originalUrl);
       else res.status(401).json({ message: 'No access token available for application. Please try again later.' });
     } else {
       console.log(err);

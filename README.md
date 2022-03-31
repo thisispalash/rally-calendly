@@ -49,7 +49,7 @@ The repository also contains screen recordings for common user flows.
 ### Login and OAuth
 
 ![](screens/img/index.png)
-![](screens/vid/login.mov)
+![](screens/gif/login.gif)
 
 ### Home Screen
 
@@ -65,20 +65,20 @@ The repository also contains screen recordings for common user flows.
 
 ### Create Event
 
-![](screens/vid/create_event.mov)
+![](screens/gif/create_event.gif)
 
 ### Edit Event
 
-![](screens/vid/edit_event.mov)
+![](screens/gif/edit_event.gif)
 
 ### Schedule Events
 
 **Blocked Attempt**
 
-![](screens/vid/book_blocked.mov)
+![](screens/gif/book_blocked.gif)
 
 **Successful Attempt**
-![](screens/vid/book_blocked.mov)
+![](screens/gif/book_blocked.gif)
 
 ### View Events
 

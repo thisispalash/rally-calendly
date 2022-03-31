@@ -44,10 +44,10 @@ function showCreatedEvents(token) {
         html += `<h5 class="card-title">${event.name}</h5>`;
         if (event.gate == 'token') {
           html += `<p class="lead">Gated by ${event.qty} $${token}</p>`;
-          html += `<button class="btn btn-large btn-outline-light" data-bs-toggle="modal" data-bs-target="#editEventModal" data-name=${event.name} data-gate=${event.gate} data-qty=${event.qty} data-calendly=${event.calendly} data-eventID=${event._id}>Edit</button>`;
+          html += `<button class="btn btn-large btn-outline-light" data-bs-toggle="modal" data-bs-target="#editEventModal" data-name="${event.name}" data-gate="${event.gate}" data-qty="${event.qty}" data-calendly="${event.calendly}" data-eventID="${event._id}">Edit</button>`;
         } else {
           html += `<p class="lead">Gated by NFT ID ${event.nft}</p>`;
-          html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#editEventModal" data-name=${event.name} data-gate=${event.gate} data-nft=${event.nft} data-calendly=${event.calendly} data-eventID=${event._id}>Edit</button>`;
+          html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#editEventModal" data-name="${event.name}" data-gate="${event.gate}" data-nft="${event.nft}" data-calendly="${event.calendly}" data-eventID="${event._id}">Edit</button>`;
         }
         html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventID="${event._id}">View</button>`
         html += '</div>';
@@ -97,7 +97,7 @@ function showScheduledEvents(rallyUserID) {
                 } else {
                   html += `<p class="lead">Gated by NFT ID ${gateData.nft}</p>`;
                 }
-                html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventid=${event.eventID} data-schedule=${event.schedule} data-invitee=${event.invitee}>View</button>`
+                html += `<button class="btn btn-large btn-outline-light mx-2" data-bs-toggle="modal" data-bs-target="#viewEventModal" data-eventid="${event.eventID}" data-schedule="${event.schedule}" data-invitee="${event.invitee}">View</button>`
               html += '</div>';
             html += '</div>';
           html += '</div>';
@@ -137,9 +137,9 @@ function showGatedEvents(token) {
         html += '</div>';
         html += '<div class="col-3 d-flex align-items-center justify-content-center">';
         if (event.gate === 'token') {
-          html += `<button class="btn btn-large btn-outline-light" data-eventid=${event._id} data-gate=${event.gate} data-token=${event.token} data-qty=${event.qty} onclick="scheduleEvent(this)">Schedule</button>`
+          html += `<button class="btn btn-large btn-outline-light" data-eventid="${event._id}" data-gate="${event.gate}" data-token="${event.token}" data-qty="${event.qty}" onclick="scheduleEvent(this)">Schedule</button>`
         } else {
-          html += `<button class="btn btn-large btn-outline-light" data-eventid=${event._id} data-gate=${event.gate} data-nft=${event.nft} onclick="scheduleEvent(this)">Schedule</button>`
+          html += `<button class="btn btn-large btn-outline-light" data-eventid="${event._id}" data-gate="${event.gate}" data-nft="${event.nft}" onclick="scheduleEvent(this)">Schedule</button>`
         }
         html += '</div>';
         html += '</div>';

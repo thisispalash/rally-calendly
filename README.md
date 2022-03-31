@@ -9,20 +9,6 @@ This application was built as a submission for the RallyIO bounty on gitcoin (li
 
 When running this application, it is important that you have a Calendly account and a Rally developer account. You will need to create Calendly events on the [Calendly website](https://calendly.com/event_types/user/me). The application pulls these events when creating gated access since there is no way to create new Calendly events programatically.
 
-### Screens
-
-The repository also contains screen recordings for common user flows.
-
-| User Flow | Screen Link |
-| :---: | :---: |
-| Login and OAuth | [video](screens/vid/login.mov) |
-| Home Screen (w/o Events) | [creator](screens/img/creator_home.png), [user](screens/img/user_home.png) |
-| Home Screen (w/ Events) | [creator](screens/img/creator_home_events.png), [user](screens/img/user_home_events.png) |
-| Create a new gated event | [video](screens/vid/create_event.mov) |
-| Edit a gated event | [video](screens/vid/edit_event.mov) |
-| Schedule a gated event | [succes](screens/vid/book_event.mov), [fail](screens/vid/book_blocked.mov) |
-| View your events | [creator](screens/img/creator_view_event.png), [user](screens/img/user_view_event.png) |
-
 ## Running Locally
 
 In the current state of development, it is best to run this application locally. In other words, this project is still under development and has not been deployed yet. To start, clone this repository by entering `git clone https://github.com/thisispalash/rally-calendly.git` in your terminal or command prompt.
@@ -55,6 +41,52 @@ For this application to work, you must rename [`.env.template`](.env.template) t
 1. Go to the root of the project (where [package.json](package.json) is) and run `npm i` to install dependencies.
 2. Run `npm run dev` to start the application in development mode.
 3. Navigate to [localhost:5555](http://localhost:5555).
+
+## Screens
+
+The repository also contains screen recordings for common user flows.
+
+### Login and OAuth
+
+![](screens/img/index.png)
+![](screens/vid/login.mov)
+
+### Home Screen
+
+**Creator Views**
+
+![](screens/img/creator_home.png)
+![](screens/img/creator_home_events.png)
+
+**User Views**
+
+![](screens/img/user_home.png)
+![](screens/img/user_home_events.png)
+
+### Create Event
+
+![](screens/vid/create_event.mov)
+
+### Edit Event
+
+![](screens/vid/edit_event.mov)
+
+### Schedule Events
+
+**Blocked Attempt**
+
+![](screens/vid/book_blocked.mov)
+
+**Successful Attempt**
+![](screens/vid/book_blocked.mov)
+
+### View Events
+
+**Creator**
+![](screens/img/creator_view_event.png)
+
+**Users**
+![](screens/img/user_view_event.png)
 
 ## Known Issues
 

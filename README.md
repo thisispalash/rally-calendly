@@ -51,6 +51,11 @@ For this application to work, you must rename [`.env.template`](.env.template) t
 2. Run `npm run dev` to start the application in development mode.
 3. Navigate to [localhost:5555](http://localhost:5555).
 
+## Known Issues
+
+- [ ] Calendly expiry of token access not handled
+- [ ] Ajax failures not handled
+
 ## Room for improvements
 
 The following would be nice to have before deploying this repository.

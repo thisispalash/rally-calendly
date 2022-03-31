@@ -29,6 +29,7 @@ In the current state of development, it is best to run this application locally.
 For this application to work, you must rename [`.env.template`](.env.template) to `.env` after filling in the incomplete values. There are two external services used by this application and the following steps are required for proper functioning.
 
 #### Rally
+> [API docs](https://api-docs.rally.io/#section/Overview)
 
 1. Create an account on [Rally](https://rally.io/signup/). Note, sign up using email and password.
 2. Fill in the value for `RALLY_USERNAME` and `RALLY_PASSWORD` in the environment file, same as the ones used in step 1.
@@ -40,6 +41,7 @@ For this application to work, you must rename [`.env.template`](.env.template) t
 5. Wait for a response from Rally before running.
 
 #### Calendly
+> [API docs](https://calendly.stoplight.io/docs/api-docs/ZG9jOjQ1Mg-calendly-developer)
 
 1. Sign up as a Calendly developer by filling out [this form](https://docs.google.com/forms/d/e/1FAIpQLSc9ltoPU9I_yyQt1gWLm6fa0xMhpPWm-mL_vfPfeilC_s1vTA/viewform) using the same email as your Calendly login.
 2. Once you receive your `client_id` and `client_secret` add those to the environment file.

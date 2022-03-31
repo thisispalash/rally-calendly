@@ -1,5 +1,5 @@
 ## Rally Gatr ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fthisispalash%2Frally-calendly&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false)
-> [Bounty Description](https://gitcoin.co/issue/creatorcointools/calendlygate/1/100027686) | [Github Issue](https://github.com/creatorcointools/calendlygate/issues/1)
+> [Bounty Description](https://gitcoin.co/issue/creatorcointools/calendlygate/1/100027686) | [Github Issue](https://github.com/creatorcointools/calendlygate/issues/1) | [LICENSE](LICENSE)
 
 Rally Gatr is a web application that allows RallyIO creators to create *gated* events such that only users that own the requisite Creator Coins or Creator NFTs can book timeslots. Creators create these events by specifying the gate type (`token` or `nft`) and the Calendly event to be associated with the gate. General users can see these open events but are forbidden to book time slots if they do not own the required tokens.
 

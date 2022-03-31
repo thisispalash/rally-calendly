@@ -97,7 +97,7 @@
         method: 'GET',
         url: `/rally/owned/${sessionStorage.rallyNetworkID}/${data.nft}`
       }).then( (val) => {
-        if (val) {
+        if (val.owned) {
           showCalendly(data.id);
         } else {
           promptUser(`NFT ID ${data.nft} not owned. Please purchase to book.`);

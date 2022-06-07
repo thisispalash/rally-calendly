@@ -169,6 +169,7 @@ class RallyClient {
         res.data.forEach( (nft) => {
           data.push({ id: nft.id, title: nft.title });
         });
+        lastKey = res.headers['last-evaluated-key'];
       }
       return data;
     } else {
